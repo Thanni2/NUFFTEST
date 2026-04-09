@@ -1,0 +1,463 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="x-apple-disable-message-reformatting">
+  <title>Your ticket — NUFFSEATS</title>
+  <!--
+    NUFFSEATS Ticket Confirmation Email
+    ─────────────────────────────────────
+    TEMPLATE VARIABLES (replace with real values when sending):
+      {{BUYER_NAME}}       — e.g. "Adaeze Johnson"
+      {{EVENT_NAME}}       — e.g. "Burna Boy — Live in Lagos"
+      {{EVENT_DATE}}       — e.g. "Saturday, 19 April 2025"
+      {{EVENT_TIME}}       — e.g. "8:00 PM WAT (Doors 6:30 PM)"
+      {{EVENT_VENUE}}      — e.g. "Tafawa Balewa Square"
+      {{EVENT_CITY}}       — e.g. "Lagos Island, Lagos"
+      {{TICKET_TYPE}}      — e.g. "General Admission"
+      {{TICKET_QTY}}       — e.g. "1"
+      {{ORDER_REF}}        — e.g. "NS-A3F2K9"
+      {{TOTAL_PAID}}       — e.g. "₦26,250"
+      {{QR_CODE_URL}}      — URL to QR code image (generated server-side)
+      {{TICKET_DOWNLOAD_URL}} — URL to download PDF ticket
+      {{EVENT_URL}}        — URL to event page
+      {{YEAR}}             — e.g. "2025"
+
+    SENDING:
+      - Use Nodemailer + Sendgrid, or Mailgun, or Resend.io
+      - Set Content-Type: text/html
+      - Subject line: "🎟 Your ticket for {{EVENT_NAME}} is confirmed"
+  -->
+  <style type="text/css">
+    /* Reset */
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+    body { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+
+    /* Responsive */
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; }
+      .fluid { max-width: 100% !important; height: auto !important; }
+      .stack-column, .stack-column-center { display: block !important; width: 100% !important; max-width: 100% !important; }
+      .stack-column-center { text-align: center !important; }
+      .center-on-mobile { text-align: center !important; }
+      .hide-on-mobile { display: none !important; max-height: 0 !important; overflow: hidden !important; }
+      .ticket-detail-cell { display: block !important; width: 100% !important; padding-bottom: 12px !important; }
+      .pad-mobile { padding-left: 24px !important; padding-right: 24px !important; }
+    }
+  </style>
+</head>
+
+<body style="margin:0;padding:0;background-color:#f0ede8;font-family:Georgia,'Times New Roman',serif;">
+
+<!-- PREVIEW TEXT (hidden, shows in inbox preview) -->
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+  Your ticket is confirmed 🎟 Show this QR code at the gate. See you there!
+  &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
+</div>
+
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#f0ede8;">
+<tr>
+<td style="padding:32px 16px;">
+
+  <!-- EMAIL WRAPPER -->
+  <table class="email-container" role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="560" style="margin:0 auto;">
+
+    <!-- ── HEADER ── -->
+    <tr>
+      <td style="padding-bottom:24px;text-align:center;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+          <tr>
+            <td style="font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:400;letter-spacing:-0.5px;color:#0d0d0d;">
+              NUFF<span style="color:#e8452a;">SEATS</span>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ── HERO BANNER ── -->
+    <tr>
+      <td style="border-radius:12px 12px 0 0;overflow:hidden;background:linear-gradient(145deg,#0a0018,#1a0040,#2d0060);">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+          <tr>
+            <td style="padding:40px 40px 32px;" class="pad-mobile">
+              <!-- Eyebrow -->
+              <p style="margin:0 0 12px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);">
+                🎟 Ticket confirmed
+              </p>
+              <!-- Event name -->
+              <h1 style="margin:0 0 16px;font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1.15;letter-spacing:-0.5px;color:#ffffff;font-weight:400;">
+                Burna Boy —<br>Live in Lagos
+              </h1>
+              <!-- Event meta pills -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="padding:5px 12px;background:rgba(255,255,255,0.12);border-radius:100px;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.8);white-space:nowrap;">
+                    📅 &nbsp;Sat 19 Apr 2025
+                  </td>
+                  <td width="8"></td>
+                  <td style="padding:5px 12px;background:rgba(255,255,255,0.12);border-radius:100px;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.8);white-space:nowrap;">
+                    📍 &nbsp;Tafawa Balewa Square
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ── GREETING ── -->
+    <tr>
+      <td style="background:#ffffff;padding:32px 40px 0;" class="pad-mobile">
+        <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:15px;color:#444;line-height:1.7;">
+          Hi <strong style="color:#0d0d0d;">Adaeze</strong>,
+        </p>
+        <p style="margin:12px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:15px;color:#444;line-height:1.7;">
+          You're going! Your ticket has been confirmed and paid for. Show the QR code below at the gate — no printing needed, just your phone.
+        </p>
+      </td>
+    </tr>
+
+    <!-- ── TICKET CARD ── -->
+    <tr>
+      <td style="background:#ffffff;padding:24px 40px;" class="pad-mobile">
+
+        <!-- Ticket outer border -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1.5px solid #e0ddd7;border-radius:10px;overflow:hidden;">
+
+          <!-- Ticket top: event details -->
+          <tr>
+            <td style="background:#f7f5f0;padding:20px 24px;border-bottom:1px solid #e0ddd7;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                  <td>
+                    <p style="margin:0 0 2px;font-family:Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#9a9690;">Event</p>
+                    <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:17px;color:#0d0d0d;font-weight:400;">Burna Boy — Live in Lagos</p>
+                  </td>
+                  <td align="right" style="vertical-align:top;">
+                    <span style="display:inline-block;padding:4px 10px;background:#e8452a;border-radius:100px;font-family:Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;color:#fff;letter-spacing:0.06em;text-transform:uppercase;">Music</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Ticket details row -->
+          <tr>
+            <td style="padding:0;background:#ffffff;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                  <td class="ticket-detail-cell" style="padding:18px 24px;border-right:1px solid #e0ddd7;width:25%;">
+                    <p style="margin:0 0 3px;font-family:Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#9a9690;">Date</p>
+                    <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;color:#0d0d0d;">Sat 19 Apr<br>2025</p>
+                  </td>
+                  <td class="ticket-detail-cell" style="padding:18px 24px;border-right:1px solid #e0ddd7;width:25%;">
+                    <p style="margin:0 0 3px;font-family:Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#9a9690;">Time</p>
+                    <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;color:#0d0d0d;">8:00 PM<br><span style="font-weight:400;color:#9a9690;">Doors 6:30</span></p>
+                  </td>
+                  <td class="ticket-detail-cell" style="padding:18px 24px;border-right:1px solid #e0ddd7;width:25%;">
+                    <p style="margin:0 0 3px;font-family:Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#9a9690;">Ticket type</p>
+                    <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;color:#0d0d0d;">General<br>Admission</p>
+                  </td>
+                  <td class="ticket-detail-cell" style="padding:18px 24px;width:25%;">
+                    <p style="margin:0 0 3px;font-family:Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#9a9690;">Qty</p>
+                    <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;color:#0d0d0d;">1 ticket</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Dashed divider -->
+          <tr>
+            <td style="padding:0 24px;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                  <td style="border-top:1.5px dashed #e0ddd7;"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- QR code + order ref -->
+          <tr>
+            <td style="padding:24px;background:#ffffff;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                  <!-- QR code -->
+                  <td align="center" style="width:120px;" valign="middle">
+                    <!--
+                      PRODUCTION: Replace this table with:
+                      <img src="{{QR_CODE_URL}}" width="100" height="100" alt="QR Code" style="display:block;border-radius:6px;">
+
+                      Generate QR codes server-side using:
+                        Node: npm install qrcode
+                        Python: pip install qrcode
+                      Encode the order reference (e.g. "NS-A3F2K9") as the QR data.
+                    -->
+                    <table role="presentation" cellspacing="2" cellpadding="0" border="0" style="background:#0d0d0d;border-radius:6px;padding:8px;" align="center">
+                      <tr>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                      </tr>
+                      <tr>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                      </tr>
+                      <tr>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                      </tr>
+                      <tr>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                      </tr>
+                      <tr>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                      </tr>
+                      <tr>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                      </tr>
+                      <tr>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                        <td style="width:8px;height:8px;background:transparent;"></td>
+                        <td style="width:8px;height:8px;background:#fff;border-radius:1px;"></td>
+                      </tr>
+                    </table>
+                    <p style="margin:8px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:9px;color:#9a9690;text-align:center;letter-spacing:0.08em;text-transform:uppercase;">Scan at gate</p>
+                  </td>
+
+                  <!-- Vertical divider -->
+                  <td width="1" style="background:#e0ddd7;"></td>
+
+                  <!-- Order details -->
+                  <td style="padding:0 0 0 24px;" valign="middle">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="padding-bottom:12px;">
+                          <p style="margin:0 0 2px;font-family:Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#9a9690;">Order reference</p>
+                          <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#0d0d0d;letter-spacing:0.05em;">NS-A3F2K9</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding-bottom:12px;">
+                          <p style="margin:0 0 2px;font-family:Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#9a9690;">Name on ticket</p>
+                          <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;color:#0d0d0d;">Adaeze Johnson</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p style="margin:0 0 2px;font-family:Helvetica,Arial,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#9a9690;">Total paid</p>
+                          <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:18px;color:#0d0d0d;">₦26,250</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+        </table>
+        <!-- /ticket card -->
+
+      </td>
+    </tr>
+
+    <!-- ── DOWNLOAD CTA ── -->
+    <tr>
+      <td style="background:#ffffff;padding:0 40px 32px;" class="pad-mobile">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+          <tr>
+            <td style="padding:16px;background:#f7f5f0;border-radius:8px;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                  <td>
+                    <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#0d0d0d;font-weight:600;">Save your ticket</p>
+                    <p style="margin:4px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#9a9690;line-height:1.5;">Download as PDF or screenshot this email. No printing needed — just show your phone at the gate.</p>
+                  </td>
+                  <td align="right" style="padding-left:16px;" valign="middle">
+                    <!--[if mso]>
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="#" style="height:36px;v-text-anchor:middle;width:120px;" arcsize="50%" fillcolor="#0d0d0d">
+                    <w:anchorlock/>
+                    <center style="color:#ffffff;font-family:Helvetica,sans-serif;font-size:12px;font-weight:bold;">Download PDF</center>
+                    </v:roundrect>
+                    <![endif]-->
+                    <!--[if !mso]><!-->
+                    <a href="#" style="display:inline-block;background:#0d0d0d;color:#ffffff;font-family:Helvetica,Arial,sans-serif;font-size:12px;font-weight:600;text-decoration:none;padding:10px 20px;border-radius:100px;white-space:nowrap;">Download PDF</a>
+                    <!--<![endif]-->
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ── VENUE INFO ── -->
+    <tr>
+      <td style="background:#ffffff;padding:0 40px 32px;border-bottom:1px solid #e0ddd7;" class="pad-mobile">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+          <tr>
+            <td style="padding:16px 20px;background:#f7f5f0;border-left:3px solid #e8452a;border-radius:0 8px 8px 0;">
+              <p style="margin:0 0 6px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#e8452a;">📍 Getting there</p>
+              <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#0d0d0d;font-weight:600;">Tafawa Balewa Square</p>
+              <p style="margin:2px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#9a9690;">Lagos Island, Lagos State</p>
+              <p style="margin:8px 0 0;">
+                <a href="https://maps.google.com/?q=Tafawa+Balewa+Square+Lagos" style="font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#e8452a;text-decoration:none;font-weight:600;">Open in Google Maps →</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ── IMPORTANT NOTES ── -->
+    <tr>
+      <td style="background:#ffffff;padding:24px 40px 32px;" class="pad-mobile">
+        <p style="margin:0 0 12px;font-family:Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;color:#0d0d0d;">Good to know before you go</p>
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+          <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede8;">
+              <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#444;line-height:1.6;">🪪 &nbsp;Bring a <strong>valid ID</strong> — this is an 18+ event</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede8;">
+              <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#444;line-height:1.6;">📱 &nbsp;Your <strong>QR code</strong> is your ticket — screenshot it in case you lose signal</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;border-bottom:1px solid #f0ede8;">
+              <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#444;line-height:1.6;">🚗 &nbsp;Limited parking on-site — arrive early or use <strong>Bolt / Uber</strong></p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;">
+              <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#444;line-height:1.6;">🔁 &nbsp;Tickets are <strong>non-refundable</strong> but transferable via NUFFSEATS up to 24hrs before</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ── DIVIDER ── -->
+    <tr>
+      <td style="background:#ffffff;padding:0 40px;" class="pad-mobile">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+          <tr><td style="border-top:1px solid #e0ddd7;"></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ── SHARE ROW ── -->
+    <tr>
+      <td style="background:#ffffff;padding:24px 40px 32px;border-radius:0 0 12px 12px;" class="pad-mobile">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+          <tr>
+            <td>
+              <p style="margin:0 0 4px;font-family:Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;color:#0d0d0d;">Spread the word 🎉</p>
+              <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#9a9690;">Tell your friends what you'll be at</p>
+            </td>
+            <td align="right" valign="middle">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="padding-left:8px;">
+                    <a href="#" style="display:inline-block;padding:8px 14px;background:#f0ede8;border-radius:100px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;color:#0d0d0d;text-decoration:none;">𝕏 Twitter</a>
+                  </td>
+                  <td style="padding-left:8px;">
+                    <a href="#" style="display:inline-block;padding:8px 14px;background:#f0ede8;border-radius:100px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;color:#0d0d0d;text-decoration:none;">💬 WhatsApp</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- ── FOOTER ── -->
+    <tr>
+      <td style="padding-top:24px;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+          <tr>
+            <td style="padding:24px 40px;background:#0d0d0d;border-radius:12px;" class="pad-mobile">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                  <td>
+                    <p style="margin:0 0 6px;font-family:Georgia,'Times New Roman',serif;font-size:16px;color:#ffffff;">NUFF<span style="color:#e8452a;">SEATS</span></p>
+                    <p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;">
+                      Nigeria's ticketing platform<br>
+                      © 2025 Nuffseats Technologies Ltd
+                    </p>
+                  </td>
+                  <td align="right" valign="top">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="padding-left:16px;"><a href="#" style="font-family:Helvetica,Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.4);text-decoration:none;">Help</a></td>
+                        <td style="padding-left:16px;"><a href="#" style="font-family:Helvetica,Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.4);text-decoration:none;">Privacy</a></td>
+                        <td style="padding-left:16px;"><a href="#" style="font-family:Helvetica,Arial,sans-serif;font-size:11px;color:rgba(255,255,255,0.4);text-decoration:none;">Unsubscribe</a></td>
+                      </tr>
+                    </table>
+                    <p style="margin:10px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:10px;color:rgba(255,255,255,0.25);text-align:right;">
+                      Sent to adaeze@email.com
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+  </table>
+  <!-- /email wrapper -->
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>

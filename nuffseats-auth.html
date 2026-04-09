@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in · NUFFSEATS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0d0d0d;
+    --white: #f7f5f0;
+    --accent: #e8452a;
+    --accent-dark: #c03520;
+    --muted: #9a9690;
+    --border: #e0ddd7;
+    --card: #ffffff;
+    --surface: #f0ede8;
+    --success: #1a7a4a;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; flex: 1; }
+  .screen.active { display: flex; }
+
+  /* ── SPLIT LAYOUT ── */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    flex: 1;
+    min-height: 100vh;
+  }
+
+  @media (max-width: 720px) {
+    .split { grid-template-columns: 1fr; }
+    .split-visual { display: none; }
+  }
+
+  /* ── VISUAL PANEL ── */
+  .split-visual {
+    background: var(--black);
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 3rem;
+  }
+
+  .visual-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(145deg, #0a0018 0%, #1a0040 40%, #0d0d0d 100%);
+  }
+
+  .visual-pattern {
+    position: absolute; inset: 0;
+    opacity: 0.04;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,1) 39px, rgba(255,255,255,1) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,1) 39px, rgba(255,255,255,1) 40px);
+  }
+
+  .visual-content { position: relative; z-index: 2; }
+
+  .visual-logo {
+    position: absolute; top: 2rem; left: 3rem; z-index: 2;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem; letter-spacing: -0.02em;
+    color: var(--white); text-decoration: none;
+  }
+  .visual-logo span { color: var(--accent); }
+
+  .visual-quote {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+    line-height: 1.2; letter-spacing: -0.02em;
+    color: var(--white); margin-bottom: 1.5rem;
+  }
+
+  .visual-quote em { font-style: italic; color: var(--accent); }
+
+  .visual-tickets {
+    display: flex; flex-direction: column; gap: 0.6rem;
+    margin-bottom: 2rem;
+  }
+
+  .visual-ticket {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    font-size: 0.8rem; color: rgba(255,255,255,0.7);
+    animation: ticketSlide 0.5s ease backwards;
+  }
+
+  .visual-ticket:nth-child(1) { animation-delay: 0.3s; }
+  .visual-ticket:nth-child(2) { animation-delay: 0.5s; }
+  .visual-ticket:nth-child(3) { animation-delay: 0.7s; }
+
+  @keyframes ticketSlide {
+    from { opacity: 0; transform: translateX(-16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .vt-emoji { font-size: 1rem; }
+  .vt-name  { font-weight: 500; color: var(--white); }
+  .vt-dot   { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; margin-left: auto; }
+
+  /* ── FORM PANEL ── */
+  .split-form {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 2rem 1.5rem;
+    background: var(--white);
+  }
+
+  .form-container {
+    width: 100%; max-width: 380px;
+  }
+
+  .form-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem; letter-spacing: -0.02em;
+    color: var(--black); text-decoration: none;
+    display: block; margin-bottom: 2.5rem;
+  }
+  .form-logo span { color: var(--accent); }
+
+  .form-heading {
+    margin-bottom: 2rem;
+  }
+
+  .form-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.85rem; letter-spacing: -0.02em; line-height: 1.1;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-sub {
+    font-size: 0.85rem; color: var(--muted);
+  }
+
+  .form-sub a { color: var(--accent); text-decoration: none; font-weight: 500; }
+  .form-sub a:hover { text-decoration: underline; }
+
+  /* ── INPUTS ── */
+  .form-group { margin-bottom: 1.1rem; }
+  .form-label { font-size: 0.78rem; font-weight: 500; color: var(--black); margin-bottom: 0.4rem; display: block; }
+
+  .input-wrap { position: relative; }
+
+  .form-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem; color: var(--black);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .form-input:focus { border-color: var(--black); background: var(--card); }
+  .form-input::placeholder { color: var(--muted); }
+  .form-input.error { border-color: var(--accent); }
+  .form-input.valid { border-color: var(--success); }
+
+  .input-toggle {
+    position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 0.85rem;
+    transition: color 0.2s;
+  }
+  .input-toggle:hover { color: var(--black); }
+
+  .form-error-msg { font-size: 0.72rem; color: var(--accent); margin-top: 0.3rem; display: none; }
+  .form-error-msg.show { display: block; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+
+  /* ── PASSWORD STRENGTH ── */
+  .pw-strength { margin-top: 0.5rem; }
+  .pw-bars { display: flex; gap: 3px; margin-bottom: 0.3rem; }
+  .pw-bar {
+    flex: 1; height: 3px; border-radius: 100px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+  .pw-bar.weak   { background: var(--accent); }
+  .pw-bar.fair   { background: #f59e0b; }
+  .pw-bar.strong { background: var(--success); }
+  .pw-label { font-size: 0.7rem; color: var(--muted); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin: 1.25rem 0; font-size: 0.75rem; color: var(--muted);
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ── SOCIAL BUTTONS ── */
+  .social-btns { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.25rem; }
+
+  .social-btn {
+    width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.65rem;
+    padding: 0.72rem 1rem;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500;
+    cursor: pointer; color: var(--black);
+    transition: all 0.15s;
+  }
+  .social-btn:hover { border-color: var(--black); background: var(--surface); }
+  .social-icon { font-size: 1rem; }
+
+  /* ── SUBMIT BUTTON ── */
+  .submit-btn {
+    width: 100%; padding: 0.85rem;
+    background: var(--black); color: var(--white);
+    border: none; border-radius: 100px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; transition: background 0.2s, transform 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .submit-btn:hover { background: var(--accent); transform: translateY(-1px); }
+  .submit-btn:disabled { background: var(--muted); cursor: not-allowed; transform: none; }
+  .submit-btn.loading { background: #444; pointer-events: none; }
+
+  /* ── TERMS ── */
+  .terms-note {
+    font-size: 0.7rem; color: var(--muted);
+    text-align: center; margin-top: 1rem; line-height: 1.6;
+  }
+  .terms-note a { color: var(--muted); text-decoration: underline; }
+
+  /* ── FORGOT PASSWORD ── */
+  .forgot-link {
+    font-size: 0.75rem; color: var(--muted);
+    text-decoration: none; float: right;
+    margin-bottom: 0.4rem;
+    transition: color 0.2s;
+  }
+  .forgot-link:hover { color: var(--accent); }
+
+  /* ── ACCOUNT TYPE PICKER ── */
+  .account-types {
+    display: flex; flex-direction: column; gap: 0.75rem;
+    margin: 1.5rem 0;
+  }
+
+  .account-type-card {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.1rem 1.25rem;
+    border: 1.5px solid var(--border);
+    border-radius: 12px; cursor: pointer;
+    transition: all 0.15s; user-select: none;
+    background: var(--card);
+  }
+  .account-type-card:hover { border-color: #aaa; }
+  .account-type-card.selected { border-color: var(--black); background: var(--surface); }
+
+  .at-radio {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid var(--border); flex-shrink: 0;
+    transition: border-color 0.15s; position: relative;
+  }
+  .account-type-card.selected .at-radio { border-color: var(--black); }
+  .account-type-card.selected .at-radio::after {
+    content: ''; position: absolute;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--black);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+  }
+
+  .at-icon {
+    width: 42px; height: 42px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0;
+    background: var(--surface);
+  }
+
+  .at-title { font-size: 0.9rem; font-weight: 500; }
+  .at-desc  { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
+  .at-badge {
+    margin-left: auto; flex-shrink: 0;
+    font-size: 0.62rem; font-weight: 600;
+    padding: 0.15rem 0.55rem; border-radius: 100px;
+  }
+  .at-badge-free { background: #eaf5ee; color: var(--success); }
+
+  /* ── SUCCESS STATE ── */
+  .success-wrap {
+    text-align: center; padding: 1rem 0;
+  }
+  .success-circle {
+    width: 68px; height: 68px; border-radius: 50%;
+    background: #eaf5ee;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; margin: 0 auto 1.25rem;
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn { from { transform: scale(0.4); opacity:0; } to { transform:scale(1); opacity:1; } }
+  .success-title { font-family: 'DM Serif Display', serif; font-size: 1.6rem; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+  .success-sub { font-size: 0.85rem; color: var(--muted); line-height: 1.7; margin-bottom: 2rem; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+  .screen.active .form-container { animation: fadeUp 0.4s ease; }
+
+  /* ── OTP INPUT ── */
+  .otp-row { display: flex; gap: 0.6rem; margin: 1.5rem 0; }
+  .otp-input {
+    flex: 1; aspect-ratio: 1;
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 10px; text-align: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem; color: var(--black);
+    outline: none; transition: border-color 0.2s;
+  }
+  .otp-input:focus { border-color: var(--black); background: var(--card); }
+  .otp-input.filled { border-color: var(--black); }
+
+  .resend-row { text-align: center; font-size: 0.78rem; color: var(--muted); margin-top: 0.5rem; }
+  .resend-link { color: var(--accent); cursor: pointer; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ -->
+<!-- SCREEN: SIGN IN                -->
+<!-- ═══════════════════════════════ -->
+<div class="screen active" id="screen-signin">
+  <div class="split">
+
+    <!-- Visual panel -->
+    <div class="split-visual">
+      <div class="visual-bg"></div>
+      <div class="visual-pattern"></div>
+      <a href="nuffseats-app.html" class="visual-logo">NUFF<span>SEATS</span></a>
+      <div class="visual-content">
+        <div class="visual-tickets">
+          <div class="visual-ticket"><span class="vt-emoji">🎤</span><span class="vt-name">Burna Boy — Live in Lagos</span><span class="vt-dot"></span></div>
+          <div class="visual-ticket"><span class="vt-emoji">😂</span><span class="vt-name">Night of 1000 Laughs</span><span class="vt-dot"></span></div>
+          <div class="visual-ticket"><span class="vt-emoji">💻</span><span class="vt-name">Lagos TechFest 2025</span><span class="vt-dot"></span></div>
+        </div>
+        <div class="visual-quote">Nigeria's events, <em>one platform.</em></div>
+      </div>
+    </div>
+
+    <!-- Form panel -->
+    <div class="split-form">
+      <div class="form-container">
+        <a href="nuffseats-app.html" class="form-logo">NUFF<span>SEATS</span></a>
+
+        <div class="form-heading">
+          <h1 class="form-title">Welcome back</h1>
+          <p class="form-sub">No account? <a href="#" onclick="showScreen('screen-signup')">Sign up free →</a></p>
+        </div>
+
+        <!-- Social login -->
+        <div class="social-btns">
+          <button class="social-btn" onclick="socialLogin('Google')">
+            <span class="social-icon">🔵</span> Continue with Google
+          </button>
+        </div>
+
+        <div class="divider">or sign in with email</div>
+
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input type="email" class="form-input" id="si-email" placeholder="you@email.com">
+          <div class="form-error-msg" id="si-email-err">Please enter a valid email</div>
+        </div>
+
+        <div class="form-group">
+          <a href="#" class="forgot-link" onclick="showScreen('screen-forgot')">Forgot password?</a>
+          <label class="form-label">Password</label>
+          <div class="input-wrap">
+            <input type="password" class="form-input" id="si-password" placeholder="Your password">
+            <button class="input-toggle" onclick="togglePw('si-password', this)" type="button">👁</button>
+          </div>
+          <div class="form-error-msg" id="si-pw-err">Please enter your password</div>
+        </div>
+
+        <button class="submit-btn" id="si-btn" onclick="submitSignin()">
+          <span id="si-btn-text">Sign in →</span>
+        </button>
+
+        <div class="terms-note" style="margin-top:1.25rem;">
+          By continuing you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SCREEN: SIGN UP — STEP 1 TYPE  -->
+<!-- ═══════════════════════════════ -->
+<div class="screen" id="screen-signup">
+  <div class="split">
+
+    <div class="split-visual">
+      <div class="visual-bg"></div>
+      <div class="visual-pattern"></div>
+      <a href="nuffseats-app.html" class="visual-logo">NUFF<span>SEATS</span></a>
+      <div class="visual-content">
+        <div class="visual-quote">Buy tickets. <em>Sell tickets.</em> Do both.</div>
+      </div>
+    </div>
+
+    <div class="split-form">
+      <div class="form-container">
+        <a href="nuffseats-app.html" class="form-logo">NUFF<span>SEATS</span></a>
+
+        <div class="form-heading">
+          <h1 class="form-title">Create your account</h1>
+          <p class="form-sub">Already have one? <a href="#" onclick="showScreen('screen-signin')">Sign in →</a></p>
+        </div>
+
+        <div class="account-types" id="accountTypes">
+          <div class="account-type-card selected" data-type="buyer" onclick="selectAccountType(this)">
+            <div class="at-radio"></div>
+            <div class="at-icon">🎟</div>
+            <div>
+              <div class="at-title">Ticket buyer</div>
+              <div class="at-desc">Buy tickets to events across Nigeria</div>
+            </div>
+            <span class="at-badge at-badge-free">Free</span>
+          </div>
+          <div class="account-type-card" data-type="organizer" onclick="selectAccountType(this)">
+            <div class="at-radio"></div>
+            <div class="at-icon">🎪</div>
+            <div>
+              <div class="at-title">Event organizer</div>
+              <div class="at-desc">Create events and sell tickets</div>
+            </div>
+            <span class="at-badge at-badge-free">Free</span>
+          </div>
+        </div>
+
+        <button class="submit-btn" onclick="proceedToDetails()">Continue →</button>
+
+        <div class="terms-note">
+          By continuing you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SCREEN: SIGN UP — STEP 2 FORM  -->
+<!-- ═══════════════════════════════ -->
+<div class="screen" id="screen-signup-form">
+  <div class="split">
+
+    <div class="split-visual">
+      <div class="visual-bg"></div>
+      <div class="visual-pattern"></div>
+      <a href="nuffseats-app.html" class="visual-logo">NUFF<span>SEATS</span></a>
+      <div class="visual-content">
+        <div class="visual-quote">One account.<br><em>Every event.</em></div>
+      </div>
+    </div>
+
+    <div class="split-form">
+      <div class="form-container">
+        <a href="nuffseats-app.html" class="form-logo">NUFF<span>SEATS</span></a>
+
+        <div class="form-heading">
+          <h1 class="form-title" id="su-form-title">Your details</h1>
+          <p class="form-sub"><a href="#" onclick="showScreen('screen-signup')">← Change account type</a></p>
+        </div>
+
+        <!-- Social -->
+        <div class="social-btns">
+          <button class="social-btn" onclick="socialLogin('Google')">
+            <span class="social-icon">🔵</span> Continue with Google
+          </button>
+        </div>
+        <div class="divider">or fill in your details</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First name</label>
+            <input type="text" class="form-input" id="su-first" placeholder="Adaeze">
+            <div class="form-error-msg" id="su-first-err">Required</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last name</label>
+            <input type="text" class="form-input" id="su-last" placeholder="Johnson">
+            <div class="form-error-msg" id="su-last-err">Required</div>
+          </div>
+        </div>
+
+        <!-- Organizer name (shown only for organizer type) -->
+        <div class="form-group" id="orgNameGroup" style="display:none;">
+          <label class="form-label">Organisation / promoter name</label>
+          <input type="text" class="form-input" id="su-org" placeholder="e.g. Spaceship Collective">
+          <div class="form-error-msg" id="su-org-err">Required for organizers</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input type="email" class="form-input" id="su-email" placeholder="you@email.com">
+          <div class="form-error-msg" id="su-email-err">Please enter a valid email</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone number</label>
+          <input type="tel" class="form-input" id="su-phone" placeholder="0801 234 5678">
+          <div class="form-error-msg" id="su-phone-err">Please enter a valid phone number</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-wrap">
+            <input type="password" class="form-input" id="su-pw" placeholder="Min. 8 characters" oninput="checkPwStrength(this.value)">
+            <button class="input-toggle" onclick="togglePw('su-pw', this)" type="button">👁</button>
+          </div>
+          <div class="pw-strength" id="pwStrength" style="display:none;">
+            <div class="pw-bars">
+              <div class="pw-bar" id="pb1"></div>
+              <div class="pw-bar" id="pb2"></div>
+              <div class="pw-bar" id="pb3"></div>
+              <div class="pw-bar" id="pb4"></div>
+            </div>
+            <div class="pw-label" id="pwLabel">Too short</div>
+          </div>
+          <div class="form-error-msg" id="su-pw-err">Password must be at least 8 characters</div>
+        </div>
+
+        <button class="submit-btn" id="su-btn" onclick="submitSignup()">
+          <span id="su-btn-text">Create account →</span>
+        </button>
+
+        <div class="terms-note">
+          By creating an account you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SCREEN: OTP VERIFY             -->
+<!-- ═══════════════════════════════ -->
+<div class="screen" id="screen-otp">
+  <div class="split">
+
+    <div class="split-visual">
+      <div class="visual-bg"></div>
+      <div class="visual-pattern"></div>
+      <a href="nuffseats-app.html" class="visual-logo">NUFF<span>SEATS</span></a>
+      <div class="visual-content">
+        <div class="visual-quote">Almost there. <em>Verify your email.</em></div>
+      </div>
+    </div>
+
+    <div class="split-form">
+      <div class="form-container">
+        <a href="nuffseats-app.html" class="form-logo">NUFF<span>SEATS</span></a>
+
+        <div class="form-heading">
+          <h1 class="form-title">Check your email</h1>
+          <p class="form-sub">We sent a 6-digit code to <strong id="otp-email-display">you@email.com</strong></p>
+        </div>
+
+        <div class="otp-row" id="otpRow">
+          <input type="text" class="otp-input" maxlength="1" oninput="otpInput(this, 0)" onkeydown="otpKeydown(event, 0)">
+          <input type="text" class="otp-input" maxlength="1" oninput="otpInput(this, 1)" onkeydown="otpKeydown(event, 1)">
+          <input type="text" class="otp-input" maxlength="1" oninput="otpInput(this, 2)" onkeydown="otpKeydown(event, 2)">
+          <input type="text" class="otp-input" maxlength="1" oninput="otpInput(this, 3)" onkeydown="otpKeydown(event, 3)">
+          <input type="text" class="otp-input" maxlength="1" oninput="otpInput(this, 4)" onkeydown="otpKeydown(event, 4)">
+          <input type="text" class="otp-input" maxlength="1" oninput="otpInput(this, 5)" onkeydown="otpKeydown(event, 5)">
+        </div>
+
+        <div class="form-error-msg show" id="otp-hint" style="color:var(--muted);display:block !important;">
+          Demo: enter any 6 digits
+        </div>
+
+        <button class="submit-btn" id="otp-btn" onclick="submitOTP()">
+          <span id="otp-btn-text">Verify →</span>
+        </button>
+
+        <div class="resend-row" style="margin-top:1.25rem;">
+          Didn't get it? <span class="resend-link" onclick="resendOTP()">Resend code</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SCREEN: FORGOT PASSWORD        -->
+<!-- ═══════════════════════════════ -->
+<div class="screen" id="screen-forgot">
+  <div class="split">
+
+    <div class="split-visual">
+      <div class="visual-bg"></div>
+      <div class="visual-pattern"></div>
+      <a href="nuffseats-app.html" class="visual-logo">NUFF<span>SEATS</span></a>
+      <div class="visual-content">
+        <div class="visual-quote">We'll get you <em>back in.</em></div>
+      </div>
+    </div>
+
+    <div class="split-form">
+      <div class="form-container">
+        <a href="nuffseats-app.html" class="form-logo">NUFF<span>SEATS</span></a>
+
+        <div class="form-heading">
+          <h1 class="form-title">Reset password</h1>
+          <p class="form-sub">Enter your email and we'll send a reset link.</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input type="email" class="form-input" id="fp-email" placeholder="you@email.com">
+          <div class="form-error-msg" id="fp-err">Please enter a valid email</div>
+        </div>
+
+        <button class="submit-btn" onclick="submitForgot()">Send reset link →</button>
+
+        <div style="text-align:center;margin-top:1.25rem;">
+          <a href="#" style="font-size:0.78rem;color:var(--muted);text-decoration:none;" onclick="showScreen('screen-signin')">← Back to sign in</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SCREEN: SUCCESS                -->
+<!-- ═══════════════════════════════ -->
+<div class="screen" id="screen-success">
+  <div class="split">
+
+    <div class="split-visual">
+      <div class="visual-bg"></div>
+      <div class="visual-pattern"></div>
+      <a href="nuffseats-app.html" class="visual-logo">NUFF<span>SEATS</span></a>
+      <div class="visual-content">
+        <div class="visual-quote">You're in. <em>Welcome to NUFFSEATS.</em></div>
+      </div>
+    </div>
+
+    <div class="split-form">
+      <div class="form-container">
+        <a href="nuffseats-app.html" class="form-logo">NUFF<span>SEATS</span></a>
+
+        <div class="success-wrap">
+          <div class="success-circle">🎉</div>
+          <h1 class="success-title" id="success-title">Account created!</h1>
+          <p class="success-sub" id="success-sub">
+            Welcome to NUFFSEATS. Your account is ready.
+          </p>
+
+          <button class="submit-btn" id="success-cta" onclick="goToDashboard()" style="margin-bottom:0.75rem;">
+            Go to my account →
+          </button>
+          <a href="nuffseats-app.html" style="display:block;text-align:center;font-size:0.82rem;color:var(--muted);text-decoration:none;margin-top:0.5rem;">
+            Browse events instead
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─────────────── SCRIPT ─────────────── -->
+<script>
+  let accountType = "buyer";
+  let signupEmail = "";
+
+  // ── SCREEN NAV ──
+  function showScreen(id) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // ── ACCOUNT TYPE ──
+  function selectAccountType(el) {
+    document.querySelectorAll(".account-type-card").forEach(c => c.classList.remove("selected"));
+    el.classList.add("selected");
+    accountType = el.dataset.type;
+  }
+
+  function proceedToDetails() {
+    const title = accountType === "organizer" ? "Organizer details" : "Your details";
+    document.getElementById("su-form-title").textContent = title;
+    document.getElementById("orgNameGroup").style.display = accountType === "organizer" ? "block" : "none";
+    showScreen("screen-signup-form");
+  }
+
+  // ── SIGN IN ──
+  function submitSignin() {
+    const email = document.getElementById("si-email").value.trim();
+    const pw    = document.getElementById("si-password").value;
+    let ok = true;
+
+    if (!email || !email.includes("@")) { showErr("si-email-err"); document.getElementById("si-email").classList.add("error"); ok = false; }
+    else { hideErr("si-email-err"); document.getElementById("si-email").classList.remove("error"); }
+
+    if (!pw) { showErr("si-pw-err"); document.getElementById("si-password").classList.add("error"); ok = false; }
+    else { hideErr("si-pw-err"); document.getElementById("si-password").classList.remove("error"); }
+
+    if (!ok) return;
+
+    setLoading("si-btn", "si-btn-text", "Signing in…");
+
+    setTimeout(() => {
+      // For demo: any valid email/password signs in
+      document.getElementById("success-title").textContent = "Welcome back!";
+      document.getElementById("success-sub").textContent = `Signed in as ${email}. Ready to find your next event.`;
+      document.getElementById("success-cta").onclick = () => window.location.href = "nuffseats-app.html";
+      showScreen("screen-success");
+    }, 1400);
+  }
+
+  // ── SIGN UP ──
+  function submitSignup() {
+    const first = document.getElementById("su-first").value.trim();
+    const last  = document.getElementById("su-last").value.trim();
+    const email = document.getElementById("su-email").value.trim();
+    const phone = document.getElementById("su-phone").value.trim();
+    const pw    = document.getElementById("su-pw").value;
+    const org   = document.getElementById("su-org").value.trim();
+    let ok = true;
+
+    if (!first) { showErr("su-first-err"); ok = false; } else hideErr("su-first-err");
+    if (!last)  { showErr("su-last-err");  ok = false; } else hideErr("su-last-err");
+    if (!email || !email.includes("@")) { showErr("su-email-err"); ok = false; } else hideErr("su-email-err");
+    if (phone.replace(/\D/g,"").length < 10) { showErr("su-phone-err"); ok = false; } else hideErr("su-phone-err");
+    if (pw.length < 8) { showErr("su-pw-err"); ok = false; } else hideErr("su-pw-err");
+    if (accountType === "organizer" && !org) { showErr("su-org-err"); ok = false; } else hideErr("su-org-err");
+
+    if (!ok) return;
+
+    signupEmail = email;
+    setLoading("su-btn", "su-btn-text", "Creating account…");
+
+    setTimeout(() => {
+      document.getElementById("otp-email-display").textContent = email;
+      showScreen("screen-otp");
+      document.querySelector(".otp-input").focus();
+      resetBtn("su-btn", "su-btn-text", "Create account →");
+    }, 1200);
+  }
+
+  // ── OTP ──
+  function otpInput(el, idx) {
+    const inputs = document.querySelectorAll(".otp-input");
+    el.value = el.value.replace(/\D/g, "").slice(-1);
+    if (el.value) {
+      el.classList.add("filled");
+      if (idx < 5) inputs[idx + 1].focus();
+      // Auto-submit when all filled
+      const code = [...inputs].map(i => i.value).join("");
+      if (code.length === 6) submitOTP();
+    } else {
+      el.classList.remove("filled");
+    }
+  }
+
+  function otpKeydown(e, idx) {
+    const inputs = document.querySelectorAll(".otp-input");
+    if (e.key === "Backspace" && !inputs[idx].value && idx > 0) {
+      inputs[idx - 1].focus();
+    }
+  }
+
+  function submitOTP() {
+    const inputs = document.querySelectorAll(".otp-input");
+    const code = [...inputs].map(i => i.value).join("");
+    if (code.length < 6) return;
+
+    setLoading("otp-btn", "otp-btn-text", "Verifying…");
+
+    setTimeout(() => {
+      if (accountType === "organizer") {
+        document.getElementById("success-title").textContent = "Organizer account ready!";
+        document.getElementById("success-sub").textContent = "Your organizer account is set up. Head to your dashboard to create your first event.";
+        document.getElementById("success-cta").onclick = () => window.location.href = "nuffseats-organizer-dashboard.html";
+        document.getElementById("success-cta").textContent = "Go to dashboard →";
+      } else {
+        document.getElementById("success-title").textContent = "Account created!";
+        document.getElementById("success-sub").textContent = "Welcome to NUFFSEATS. Browse events and grab your first ticket.";
+        document.getElementById("success-cta").onclick = () => window.location.href = "nuffseats-app.html";
+      }
+      showScreen("screen-success");
+    }, 1200);
+  }
+
+  function resendOTP() {
+    const link = document.querySelector(".resend-link");
+    link.textContent = "Sent!";
+    link.style.color = "var(--success)";
+    setTimeout(() => { link.textContent = "Resend code"; link.style.color = ""; }, 3000);
+  }
+
+  // ── FORGOT PASSWORD ──
+  function submitForgot() {
+    const email = document.getElementById("fp-email").value.trim();
+    if (!email || !email.includes("@")) { showErr("fp-err"); return; }
+    hideErr("fp-err");
+
+    document.getElementById("success-title").textContent = "Reset link sent!";
+    document.getElementById("success-sub").textContent = `We've sent a password reset link to ${email}. Check your inbox.`;
+    document.getElementById("success-cta").textContent = "Back to sign in →";
+    document.getElementById("success-cta").onclick = () => showScreen("screen-signin");
+    showScreen("screen-success");
+  }
+
+  // ── PASSWORD STRENGTH ──
+  function checkPwStrength(pw) {
+    const bars  = [document.getElementById("pb1"), document.getElementById("pb2"), document.getElementById("pb3"), document.getElementById("pb4")];
+    const label = document.getElementById("pwLabel");
+    const wrap  = document.getElementById("pwStrength");
+
+    wrap.style.display = pw.length > 0 ? "block" : "none";
+    bars.forEach(b => { b.className = "pw-bar"; });
+
+    let score = 0;
+    if (pw.length >= 8) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+    const cls   = score <= 1 ? "weak" : score === 2 ? "fair" : "strong";
+    const labels = { weak:"Too weak", fair:"Fair", strong: score === 4 ? "Very strong" : "Strong" };
+
+    for (let i = 0; i < score; i++) bars[i].classList.add(cls);
+    label.textContent = labels[cls];
+    label.style.color = cls === "weak" ? "var(--accent)" : cls === "fair" ? "#b45309" : "var(--success)";
+  }
+
+  // ── SOCIAL LOGIN ──
+  function socialLogin(provider) {
+    alert(`${provider} OAuth — connect your ${provider} app credentials here in production (Firebase Auth or NextAuth).`);
+  }
+
+  // ── SUCCESS ROUTE ──
+  function goToDashboard() {
+    window.location.href = accountType === "organizer"
+      ? "nuffseats-organizer-dashboard.html"
+      : "nuffseats-app.html";
+  }
+
+  // ── PW TOGGLE ──
+  function togglePw(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") { input.type = "text"; btn.textContent = "🙈"; }
+    else { input.type = "password"; btn.textContent = "👁"; }
+  }
+
+  // ── UTILS ──
+  function showErr(id) { document.getElementById(id).classList.add("show"); }
+  function hideErr(id) { document.getElementById(id).classList.remove("show"); }
+
+  function setLoading(btnId, textId, msg) {
+    const btn = document.getElementById(btnId);
+    btn.disabled = true; btn.classList.add("loading");
+    document.getElementById(textId).textContent = msg;
+  }
+
+  function resetBtn(btnId, textId, label) {
+    const btn = document.getElementById(btnId);
+    btn.disabled = false; btn.classList.remove("loading");
+    document.getElementById(textId).textContent = label;
+  }
+
+  // Allow Enter key on sign-in
+  document.getElementById("si-password").addEventListener("keydown", e => {
+    if (e.key === "Enter") submitSignin();
+  });
+</script>
+</body>
+</html>

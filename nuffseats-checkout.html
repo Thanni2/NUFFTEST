@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout · NUFFSEATS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #0d0d0d;
+    --white: #f7f5f0;
+    --accent: #e8452a;
+    --accent-dark: #c03520;
+    --muted: #9a9690;
+    --border: #e0ddd7;
+    --card: #ffffff;
+    --surface: #f0ede8;
+    --success: #1a7a4a;
+    --success-bg: #eaf5ee;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; height: 60px;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-family: 'DM Serif Display', serif; font-size: 1.25rem; letter-spacing: -0.02em; color: var(--black); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .nav-secure { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--muted); }
+
+  /* ── STEPS BAR ── */
+  .steps-bar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 5%;
+  }
+  .steps-inner {
+    display: flex; align-items: center;
+    max-width: 880px; margin: 0 auto;
+    height: 52px; gap: 0;
+  }
+  .step {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-size: 0.8rem; color: var(--muted);
+    padding: 0 1.25rem 0 0;
+    position: relative; flex-shrink: 0;
+  }
+  .step:not(:last-child)::after {
+    content: '›';
+    position: absolute; right: 0.35rem;
+    color: var(--border); font-size: 1rem;
+  }
+  .step.active { color: var(--black); font-weight: 500; }
+  .step.done { color: var(--success); }
+  .step-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 500;
+    background: var(--surface); color: var(--muted);
+    flex-shrink: 0;
+  }
+  .step.active .step-num { background: var(--black); color: var(--white); }
+  .step.done .step-num { background: var(--success); color: #fff; font-size: 0.75rem; }
+
+  /* ── LAYOUT ── */
+  .checkout-body {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 2rem;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 2.5rem 5%;
+    align-items: start;
+  }
+  @media (max-width: 760px) {
+    .checkout-body { grid-template-columns: 1fr; }
+    .order-sidebar { order: -1; }
+  }
+
+  /* ── FORM PANELS ── */
+  .form-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+  }
+  .panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 1.4rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .panel-title {
+    font-size: 0.9rem; font-weight: 500;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .panel-title-icon {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--black); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 500;
+  }
+  .panel-edit { font-size: 0.75rem; color: var(--accent); cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; }
+  .panel-body { padding: 1.4rem; }
+
+  /* ── FORM ELEMENTS ── */
+  .form-group { margin-bottom: 1.1rem; }
+  .form-group:last-child { margin-bottom: 0; }
+  .form-label {
+    font-size: 0.78rem; font-weight: 500; color: var(--black);
+    margin-bottom: 0.4rem; display: block;
+  }
+  .form-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0.72rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem; color: var(--black);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .form-input:focus { border-color: var(--black); background: var(--card); }
+  .form-input::placeholder { color: var(--muted); }
+  .form-input.error { border-color: var(--accent); }
+  .form-input.valid { border-color: var(--success); }
+  .form-error { font-size: 0.72rem; color: var(--accent); margin-top: 0.3rem; display: none; }
+  .form-error.show { display: block; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+  @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+  .form-hint { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; }
+
+  /* ── PAYMENT METHOD SELECTOR ── */
+  .pay-methods { display: flex; flex-direction: column; gap: 0.6rem; }
+  .pay-method-row {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1rem 1.1rem;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    cursor: pointer; transition: all 0.15s; user-select: none;
+  }
+  .pay-method-row:hover { border-color: #aaa; }
+  .pay-method-row.selected { border-color: var(--black); background: var(--surface); }
+  .pay-radio {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0; position: relative;
+    transition: border-color 0.15s;
+  }
+  .pay-method-row.selected .pay-radio { border-color: var(--black); }
+  .pay-method-row.selected .pay-radio::after {
+    content: ''; position: absolute;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--black);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+  }
+  .pay-method-icon { font-size: 1.25rem; flex-shrink: 0; }
+  .pay-method-label { font-size: 0.88rem; font-weight: 500; }
+  .pay-method-sub { font-size: 0.72rem; color: var(--muted); }
+  .pay-method-badge {
+    margin-left: auto; font-size: 0.65rem; font-weight: 500;
+    padding: 0.15rem 0.5rem; border-radius: 100px;
+    background: var(--success-bg); color: var(--success);
+    flex-shrink: 0;
+  }
+
+  /* Card fields (shown when card selected) */
+  .card-fields { margin-top: 1rem; display: none; }
+  .card-fields.open { display: block; }
+  .card-number-wrap { position: relative; }
+  .card-icons {
+    position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+    display: flex; gap: 0.35rem; font-size: 0.85rem;
+  }
+
+  /* USSD display */
+  .ussd-box {
+    margin-top: 1rem; display: none;
+    background: var(--surface); border-radius: 8px; padding: 1rem;
+    text-align: center;
+  }
+  .ussd-box.open { display: block; }
+  .ussd-code { font-family: 'DM Serif Display', serif; font-size: 2rem; letter-spacing: 0.05em; color: var(--black); }
+  .ussd-hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.35rem; }
+
+  /* Bank transfer */
+  .bank-box {
+    margin-top: 1rem; display: none;
+    border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+  }
+  .bank-box.open { display: block; }
+  .bank-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+  .bank-row:last-child { border-bottom: none; }
+  .bank-row-label { color: var(--muted); font-size: 0.75rem; }
+  .bank-row-value { font-weight: 500; }
+  .copy-btn {
+    font-size: 0.7rem; color: var(--accent); cursor: pointer;
+    background: none; border: none; font-family: 'DM Sans', sans-serif;
+    padding: 0.2rem 0.5rem; border-radius: 4px;
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: var(--surface); }
+
+  /* ── CTA ── */
+  .checkout-cta {
+    width: 100%; background: var(--black); color: var(--white);
+    border: none; border-radius: 100px;
+    padding: 0.95rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; transition: background 0.2s, transform 0.15s;
+    margin-top: 0.5rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  }
+  .checkout-cta:hover { background: var(--accent); transform: translateY(-1px); }
+  .checkout-cta:disabled { background: var(--muted); cursor: not-allowed; transform: none; }
+  .checkout-cta.loading { background: #444; pointer-events: none; }
+
+  .trust-strip {
+    display: flex; align-items: center; justify-content: center;
+    gap: 1.25rem; margin-top: 1rem; flex-wrap: wrap;
+  }
+  .trust-item { display: flex; align-items: center; gap: 0.3rem; font-size: 0.7rem; color: var(--muted); }
+
+  /* ── ORDER SIDEBAR ── */
+  .order-sidebar { }
+  .order-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    position: sticky; top: 1.5rem;
+  }
+  .order-card-head {
+    padding: 1.1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--black); color: var(--white);
+  }
+  .order-event-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem; line-height: 1.2;
+    margin-bottom: 0.3rem;
+  }
+  .order-event-meta { font-size: 0.75rem; color: rgba(255,255,255,0.55); }
+
+  .order-items { padding: 1rem 1.25rem; }
+  .order-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.65rem 0; border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+  .order-item:last-child { border-bottom: none; }
+  .order-item-name { font-weight: 500; }
+  .order-item-sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+  .order-item-price { font-weight: 500; flex-shrink: 0; margin-left: 1rem; }
+
+  .order-totals {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .order-total-row {
+    display: flex; justify-content: space-between;
+    font-size: 0.82rem; color: var(--muted); margin-bottom: 0.35rem;
+  }
+  .order-total-row.grand {
+    font-size: 1rem; color: var(--black); font-weight: 500;
+    margin-top: 0.75rem; padding-top: 0.75rem;
+    border-top: 1px solid var(--border); margin-bottom: 0;
+  }
+  .order-total-row.grand span:last-child {
+    font-family: 'DM Serif Display', serif; font-size: 1.25rem;
+  }
+
+  .promo-row {
+    padding: 0 1.25rem 1rem;
+    display: flex; gap: 0.5rem;
+  }
+  .promo-input {
+    flex: 1; background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 0.55rem 0.85rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+    color: var(--black); outline: none;
+    transition: border-color 0.2s;
+  }
+  .promo-input:focus { border-color: var(--black); }
+  .promo-input::placeholder { color: var(--muted); }
+  .promo-btn {
+    background: var(--black); color: var(--white);
+    border: none; border-radius: 8px;
+    padding: 0 1rem; font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 500; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .promo-btn:hover { background: var(--accent); }
+
+  /* ── SUCCESS STATE ── */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .success-screen.show { display: block; }
+
+  .success-icon {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--success-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; margin: 0 auto 1.5rem;
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  .success-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem; letter-spacing: -0.02em; margin-bottom: 0.75rem;
+  }
+  .success-sub { font-size: 0.9rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.7; }
+
+  .ticket-preview {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    text-align: left;
+  }
+  .ticket-preview-top {
+    background: linear-gradient(135deg, #0a0018, #2d0060);
+    padding: 1.5rem;
+    color: #fff;
+  }
+  .ticket-preview-event { font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: 0.3rem; }
+  .ticket-preview-meta { font-size: 0.78rem; color: rgba(255,255,255,0.6); }
+  .ticket-divider {
+    border: none; border-top: 1.5px dashed var(--border);
+    position: relative;
+  }
+  .ticket-divider::before, .ticket-divider::after {
+    content: ''; position: absolute;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--white); top: 50%; transform: translateY(-50%);
+  }
+  .ticket-divider::before { left: -9px; }
+  .ticket-divider::after { right: -9px; }
+  .ticket-preview-bottom {
+    padding: 1.25rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  }
+  .ticket-detail-col { }
+  .ticket-detail-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.2rem; }
+  .ticket-detail-val { font-size: 0.88rem; font-weight: 500; }
+  .qr-box {
+    width: 72px; height: 72px;
+    background: var(--black);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .qr-grid {
+    display: grid; grid-template-columns: repeat(6,8px); grid-template-rows: repeat(6,8px); gap: 1px;
+  }
+  .qr-cell { border-radius: 1px; }
+
+  .success-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+  .btn-full {
+    display: block; width: 100%;
+    padding: 0.85rem; border-radius: 100px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+    text-align: center; text-decoration: none; cursor: pointer; border: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-full:hover { transform: translateY(-1px); }
+  .btn-full-dark { background: var(--black); color: var(--white); }
+  .btn-full-dark:hover { background: #2a2a2a; }
+  .btn-full-outline { background: transparent; color: var(--black); border: 1.5px solid var(--border); }
+  .btn-full-outline:hover { border-color: var(--black); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { opacity: 0; animation: fadeUp 0.5s ease forwards; }
+  .fade-up:nth-child(1) { animation-delay: 0.1s; }
+  .fade-up:nth-child(2) { animation-delay: 0.2s; }
+  .fade-up:nth-child(3) { animation-delay: 0.3s; }
+  .fade-up:nth-child(4) { animation-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="nuffseats-event-detail.html" class="logo">NUFF<span>SEATS</span></a>
+  <div class="nav-secure">🔒 Secure checkout</div>
+</nav>
+
+<!-- STEPS -->
+<div class="steps-bar">
+  <div class="steps-inner">
+    <div class="step done" id="step1El">
+      <div class="step-num">✓</div>
+      <span>Event</span>
+    </div>
+    <div class="step active" id="step2El">
+      <div class="step-num">2</div>
+      <span>Your details</span>
+    </div>
+    <div class="step" id="step3El">
+      <div class="step-num">3</div>
+      <span>Payment</span>
+    </div>
+    <div class="step" id="step4El">
+      <div class="step-num">4</div>
+      <span>Confirmation</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CHECKOUT FORM -->
+<div id="checkoutView">
+  <div class="checkout-body">
+
+    <!-- LEFT: FORMS -->
+    <div class="left-col">
+
+      <!-- STEP 2: BUYER DETAILS -->
+      <div class="form-panel fade-up" id="detailsPanel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <div class="panel-title-icon">1</div>
+            Your details
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label class="form-label">Full name</label>
+            <input type="text" class="form-input" id="buyerName" placeholder="Adaeze Johnson">
+            <div class="form-error" id="nameErr">Please enter your full name</div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email address</label>
+              <input type="email" class="form-input" id="buyerEmail" placeholder="you@email.com">
+              <div class="form-hint">Ticket will be sent here</div>
+              <div class="form-error" id="emailErr">Please enter a valid email</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone number</label>
+              <input type="tel" class="form-input" id="buyerPhone" placeholder="0801 234 5678">
+              <div class="form-hint">For SMS ticket delivery</div>
+              <div class="form-error" id="phoneErr">Please enter a valid phone number</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: PAYMENT -->
+      <div class="form-panel fade-up" id="paymentPanel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <div class="panel-title-icon">2</div>
+            Payment method
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="pay-methods">
+
+            <!-- Card -->
+            <div class="pay-method-row selected" data-method="card" onclick="selectPayMethod(this)">
+              <div class="pay-radio"></div>
+              <div class="pay-method-icon">💳</div>
+              <div>
+                <div class="pay-method-label">Debit / Credit card</div>
+                <div class="pay-method-sub">Mastercard, Visa, Verve</div>
+              </div>
+              <div class="pay-method-badge">Instant</div>
+            </div>
+
+            <!-- Card fields -->
+            <div class="card-fields open" id="cardFields">
+              <div class="form-group">
+                <label class="form-label">Card number</label>
+                <div class="card-number-wrap">
+                  <input type="text" class="form-input" id="cardNumber" placeholder="0000  0000  0000  0000" maxlength="19">
+                  <div class="card-icons">💳</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Expiry date</label>
+                  <input type="text" class="form-input" id="cardExpiry" placeholder="MM / YY" maxlength="7">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">CVV</label>
+                  <input type="text" class="form-input" id="cardCvv" placeholder="•••" maxlength="4">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Name on card</label>
+                <input type="text" class="form-input" id="cardName" placeholder="ADAEZE JOHNSON">
+              </div>
+            </div>
+
+            <!-- Bank transfer -->
+            <div class="pay-method-row" data-method="bank" onclick="selectPayMethod(this)">
+              <div class="pay-radio"></div>
+              <div class="pay-method-icon">🏦</div>
+              <div>
+                <div class="pay-method-label">Bank transfer</div>
+                <div class="pay-method-sub">Transfer directly to our account</div>
+              </div>
+              <div class="pay-method-badge">5–10 mins</div>
+            </div>
+            <div class="bank-box" id="bankBox">
+              <div class="bank-row">
+                <div>
+                  <div class="bank-row-label">Bank name</div>
+                  <div class="bank-row-value">Guaranty Trust Bank (GTB)</div>
+                </div>
+              </div>
+              <div class="bank-row">
+                <div>
+                  <div class="bank-row-label">Account number</div>
+                  <div class="bank-row-value">0123456789</div>
+                </div>
+                <button class="copy-btn" onclick="copyText('0123456789', this)">Copy</button>
+              </div>
+              <div class="bank-row">
+                <div>
+                  <div class="bank-row-label">Account name</div>
+                  <div class="bank-row-value">Nuffseats Technologies Ltd</div>
+                </div>
+              </div>
+              <div class="bank-row">
+                <div>
+                  <div class="bank-row-label">Amount to transfer</div>
+                  <div class="bank-row-value" id="bankAmount">₦26,250</div>
+                </div>
+                <button class="copy-btn" onclick="copyText(document.getElementById('bankAmount').textContent, this)">Copy</button>
+              </div>
+            </div>
+
+            <!-- USSD -->
+            <div class="pay-method-row" data-method="ussd" onclick="selectPayMethod(this)">
+              <div class="pay-radio"></div>
+              <div class="pay-method-icon">📱</div>
+              <div>
+                <div class="pay-method-label">USSD</div>
+                <div class="pay-method-sub">Dial from your phone, any network</div>
+              </div>
+              <div class="pay-method-badge">Instant</div>
+            </div>
+            <div class="ussd-box" id="ussdBox">
+              <div class="ussd-code" id="ussdCode">*737*000*26250#</div>
+              <div class="ussd-hint">Dial this code from your registered phone number.<br>Works on GTB, Access, Zenith, UBA and more.</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="fade-up">
+        <button class="checkout-cta" id="payBtn" onclick="submitPayment()">
+          <span id="payBtnText">Complete payment →</span>
+        </button>
+        <div class="trust-strip">
+          <div class="trust-item">🔒 SSL encrypted</div>
+          <div class="trust-item">✓ Powered by Paystack</div>
+          <div class="trust-item">📧 Instant ticket delivery</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: ORDER SUMMARY -->
+    <div class="order-sidebar">
+      <div class="order-card fade-up">
+        <div class="order-card-head">
+          <div class="order-event-name">Burna Boy — Live in Lagos</div>
+          <div class="order-event-meta">Sat 19 Apr 2025 · Tafawa Balewa Square</div>
+        </div>
+
+        <div class="order-items">
+          <div class="order-item">
+            <div>
+              <div class="order-item-name" id="summaryTicketName">1× General Admission</div>
+              <div class="order-item-sub">Standing floor access</div>
+            </div>
+            <div class="order-item-price" id="summaryTicketPrice">₦25,000</div>
+          </div>
+        </div>
+
+        <!-- PROMO CODE -->
+        <div class="promo-row">
+          <input type="text" class="promo-input" id="promoInput" placeholder="Promo code">
+          <button class="promo-btn" onclick="applyPromo()">Apply</button>
+        </div>
+
+        <div class="order-totals">
+          <div class="order-total-row"><span>Subtotal</span><span id="summarySubtotal">₦25,000</span></div>
+          <div class="order-total-row" id="discountRow" style="display:none;color:var(--success)"><span>Discount</span><span id="summaryDiscount">−₦0</span></div>
+          <div class="order-total-row"><span>Service fee (5%)</span><span id="summaryFee">₦1,250</span></div>
+          <div class="order-total-row grand"><span>Total</span><span id="summaryTotal">₦26,250</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SUCCESS SCREEN -->
+<div class="success-screen" id="successScreen">
+  <div class="success-icon">🎉</div>
+  <h1 class="success-title">You're going!</h1>
+  <p class="success-sub">Your ticket for <strong>Burna Boy — Live in Lagos</strong> has been confirmed.<br>We've sent it to your email and phone number.</p>
+
+  <!-- TICKET PREVIEW -->
+  <div class="ticket-preview">
+    <div class="ticket-preview-top">
+      <div class="ticket-preview-event">Burna Boy — Live in Lagos</div>
+      <div class="ticket-preview-meta">Sat 19 Apr 2025 · 8:00 PM · Tafawa Balewa Square</div>
+    </div>
+    <hr class="ticket-divider">
+    <div class="ticket-preview-bottom">
+      <div style="display:flex;gap:2rem;flex-wrap:wrap;">
+        <div class="ticket-detail-col">
+          <div class="ticket-detail-label">Ticket type</div>
+          <div class="ticket-detail-val" id="confirmTicketType">General Admission</div>
+        </div>
+        <div class="ticket-detail-col">
+          <div class="ticket-detail-label">Name</div>
+          <div class="ticket-detail-val" id="confirmName">—</div>
+        </div>
+        <div class="ticket-detail-col">
+          <div class="ticket-detail-label">Order ref</div>
+          <div class="ticket-detail-val" id="confirmRef">—</div>
+        </div>
+      </div>
+      <div class="qr-box">
+        <div class="qr-grid" id="qrGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="success-actions">
+    <button class="btn-full btn-full-dark" onclick="window.print()">Download ticket (PDF)</button>
+    <a href="nuffseats-app.html" class="btn-full btn-full-outline">Browse more events</a>
+  </div>
+</div>
+
+<script>
+  // ── Order state (normally passed from event detail page via URL params or sessionStorage) ──
+  const ORDER = {
+    ticketName: "General Admission",
+    ticketDesc: "Standing floor access",
+    ticketPrice: 25000,
+    qty: 1,
+    promoDiscount: 0
+  };
+
+  const FEE_RATE = 0.05;
+
+  function fmt(n) { return "₦" + Math.round(n).toLocaleString(); }
+
+  function calcTotals() {
+    const sub  = ORDER.ticketPrice * ORDER.qty;
+    const disc = ORDER.promoDiscount;
+    const fee  = Math.round((sub - disc) * FEE_RATE);
+    const total = sub - disc + fee;
+    return { sub, disc, fee, total };
+  }
+
+  function renderSummary() {
+    const { sub, disc, fee, total } = calcTotals();
+    document.getElementById("summaryTicketName").textContent  = `${ORDER.qty}× ${ORDER.ticketName}`;
+    document.getElementById("summaryTicketPrice").textContent = fmt(ORDER.ticketPrice * ORDER.qty);
+    document.getElementById("summarySubtotal").textContent    = fmt(sub);
+    document.getElementById("summaryFee").textContent         = fmt(fee);
+    document.getElementById("summaryTotal").textContent       = fmt(total);
+    document.getElementById("bankAmount").textContent         = fmt(total);
+
+    const discRow = document.getElementById("discountRow");
+    if (disc > 0) {
+      discRow.style.display = "flex";
+      document.getElementById("summaryDiscount").textContent = "−" + fmt(disc);
+    } else {
+      discRow.style.display = "none";
+    }
+
+    // Update USSD code with actual total
+    document.getElementById("ussdCode").textContent = `*737*000*${Math.round(total)}#`;
+  }
+
+  // ── Payment method ──
+  let activeMethod = "card";
+
+  function selectPayMethod(el) {
+    document.querySelectorAll(".pay-method-row").forEach(r => r.classList.remove("selected"));
+    el.classList.add("selected");
+    activeMethod = el.dataset.method;
+
+    document.getElementById("cardFields").classList.toggle("open", activeMethod === "card");
+    document.getElementById("bankBox").classList.toggle("open",   activeMethod === "bank");
+    document.getElementById("ussdBox").classList.toggle("open",   activeMethod === "ussd");
+  }
+
+  // ── Card number formatting ──
+  document.getElementById("cardNumber").addEventListener("input", function() {
+    let v = this.value.replace(/\D/g, "").slice(0,16);
+    this.value = v.replace(/(.{4})/g, "$1  ").trim();
+  });
+
+  document.getElementById("cardExpiry").addEventListener("input", function() {
+    let v = this.value.replace(/\D/g, "").slice(0,4);
+    if (v.length >= 3) v = v.slice(0,2) + " / " + v.slice(2);
+    this.value = v;
+  });
+
+  // ── Promo code ──
+  const PROMO_CODES = { "NUFF20": 0.20, "LAGOS10": 0.10, "FIRSTTIME": 0.15 };
+
+  function applyPromo() {
+    const code = document.getElementById("promoInput").value.trim().toUpperCase();
+    if (PROMO_CODES[code]) {
+      const base = ORDER.ticketPrice * ORDER.qty;
+      ORDER.promoDiscount = Math.round(base * PROMO_CODES[code]);
+      document.getElementById("promoInput").style.borderColor = "var(--success)";
+      renderSummary();
+      // Show success hint
+      const hint = document.createElement("div");
+      hint.style.cssText = "font-size:0.72rem;color:var(--success);margin-top:0.3rem;";
+      hint.textContent = `✓ Code applied — ${Math.round(PROMO_CODES[code]*100)}% discount`;
+      const row = document.querySelector(".promo-row");
+      const existing = row.nextElementSibling;
+      if (existing && existing.tagName === "DIV" && existing.style.color) existing.remove();
+      row.insertAdjacentElement("afterend", hint);
+    } else {
+      document.getElementById("promoInput").style.borderColor = "var(--accent)";
+    }
+  }
+
+  // ── Validation ──
+  function validate() {
+    let ok = true;
+
+    const name  = document.getElementById("buyerName").value.trim();
+    const email = document.getElementById("buyerEmail").value.trim();
+    const phone = document.getElementById("buyerPhone").value.trim();
+
+    // Name
+    const nameErr = document.getElementById("nameErr");
+    if (!name) {
+      document.getElementById("buyerName").classList.add("error");
+      nameErr.classList.add("show"); ok = false;
+    } else {
+      document.getElementById("buyerName").classList.remove("error");
+      document.getElementById("buyerName").classList.add("valid");
+      nameErr.classList.remove("show");
+    }
+
+    // Email
+    const emailErr = document.getElementById("emailErr");
+    if (!email || !email.includes("@")) {
+      document.getElementById("buyerEmail").classList.add("error");
+      emailErr.classList.add("show"); ok = false;
+    } else {
+      document.getElementById("buyerEmail").classList.remove("error");
+      document.getElementById("buyerEmail").classList.add("valid");
+      emailErr.classList.remove("show");
+    }
+
+    // Phone
+    const phoneErr = document.getElementById("phoneErr");
+    const cleanPhone = phone.replace(/\D/g,"");
+    if (cleanPhone.length < 10) {
+      document.getElementById("buyerPhone").classList.add("error");
+      phoneErr.classList.add("show"); ok = false;
+    } else {
+      document.getElementById("buyerPhone").classList.remove("error");
+      document.getElementById("buyerPhone").classList.add("valid");
+      phoneErr.classList.remove("show");
+    }
+
+    // Card fields if card selected
+    if (activeMethod === "card") {
+      const cardNum = document.getElementById("cardNumber").value.replace(/\s/g,"");
+      if (cardNum.length < 16) {
+        document.getElementById("cardNumber").classList.add("error"); ok = false;
+      } else {
+        document.getElementById("cardNumber").classList.remove("error");
+      }
+    }
+
+    return ok;
+  }
+
+  // ── Submit ──
+  function submitPayment() {
+    if (!validate()) return;
+
+    const btn = document.getElementById("payBtn");
+    const txt = document.getElementById("payBtnText");
+    btn.classList.add("loading");
+    txt.textContent = "Processing payment…";
+
+    // Simulate payment gateway (replace with real Paystack integration)
+    setTimeout(() => {
+      showSuccess();
+    }, 2200);
+  }
+
+  // ── Success ──
+  function showSuccess() {
+    document.getElementById("checkoutView").style.display = "none";
+    const sc = document.getElementById("successScreen");
+    sc.classList.add("show");
+
+    // Fill in confirmation details
+    const name = document.getElementById("buyerName").value.trim();
+    document.getElementById("confirmName").textContent      = name || "—";
+    document.getElementById("confirmTicketType").textContent = ORDER.ticketName;
+    document.getElementById("confirmRef").textContent        = "NS-" + Math.random().toString(36).substring(2,8).toUpperCase();
+
+    // Update steps
+    ["step1El","step2El","step3El","step4El"].forEach((id,i) => {
+      const el = document.getElementById(id);
+      el.classList.remove("active");
+      el.classList.add("done");
+      el.querySelector(".step-num").textContent = "✓";
+    });
+    document.getElementById("step4El").classList.add("active");
+
+    // Generate fake QR grid
+    generateQR();
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function generateQR() {
+    const grid = document.getElementById("qrGrid");
+    const pattern = [1,1,1,0,0,1, 1,0,1,1,0,1, 1,0,1,0,1,0, 0,1,0,1,1,0, 1,1,0,0,1,1, 0,1,1,0,1,0];
+    grid.innerHTML = pattern.map(on =>
+      `<div class="qr-cell" style="background:${on ? '#fff' : 'transparent'}"></div>`
+    ).join("");
+  }
+
+  // ── Copy helper ──
+  function copyText(text, btn) {
+    navigator.clipboard.writeText(text.replace(/[₦,]/g,"")).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = "Copied!";
+      btn.style.color = "var(--success)";
+      setTimeout(() => { btn.textContent = orig; btn.style.color = ""; }, 2000);
+    });
+  }
+
+  // ── Init ──
+  renderSummary();
+</script>
+</body>
+</html>

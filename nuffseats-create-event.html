@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Event · NUFFSEATS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #0d0d0d;
+    --white: #f7f5f0;
+    --accent: #e8452a;
+    --accent-dark: #c03520;
+    --muted: #9a9690;
+    --border: #e0ddd7;
+    --card: #ffffff;
+    --surface: #f0ede8;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; height: 60px;
+    background: rgba(247,245,240,0.95);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-family: 'DM Serif Display', serif; font-size: 1.25rem; letter-spacing: -0.02em; color: var(--black); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .nav-right { display: flex; align-items: center; gap: 1rem; font-size: 0.82rem; color: var(--muted); }
+
+  /* ── STEPS SIDEBAR ── */
+  .page-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr 300px;
+    gap: 0;
+    min-height: calc(100vh - 60px);
+  }
+
+  .steps-sidebar {
+    border-right: 1px solid var(--border);
+    padding: 2rem 1.5rem;
+    position: sticky; top: 60px;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+
+  .steps-label {
+    font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1.5rem;
+  }
+
+  .step-item {
+    display: flex; align-items: flex-start; gap: 0.85rem;
+    padding: 0.75rem 0;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .step-item:not(.active):not(.done) { opacity: 0.45; }
+  .step-item:hover { opacity: 1; }
+
+  .step-dot {
+    width: 24px; height: 24px; border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 600;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+  .step-item.active .step-dot { background: var(--black); border-color: var(--black); color: var(--white); }
+  .step-item.done .step-dot { background: #1a7a4a; border-color: #1a7a4a; color: #fff; }
+
+  .step-connector {
+    width: 1px; height: 20px;
+    background: var(--border);
+    margin: 2px 0 2px 11px;
+  }
+
+  .step-text-title { font-size: 0.85rem; font-weight: 500; color: var(--black); }
+  .step-text-sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+
+  /* ── MAIN FORM AREA ── */
+  .form-area {
+    padding: 2.5rem 3rem;
+    max-width: 680px;
+  }
+
+  .form-step { display: none; }
+  .form-step.active { display: block; }
+
+  .step-heading {
+    margin-bottom: 2rem;
+  }
+  .step-eyebrow {
+    font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.5rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .step-eyebrow::before { content: ''; width: 16px; height: 1px; background: var(--accent); }
+  .step-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.75rem; letter-spacing: -0.02em; line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+  .step-desc { font-size: 0.875rem; color: var(--muted); }
+
+  /* ── FORM ELEMENTS ── */
+  .form-group { margin-bottom: 1.4rem; }
+  .form-label {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.8rem; font-weight: 500; color: var(--black);
+    margin-bottom: 0.45rem;
+  }
+  .form-label-opt { font-size: 0.72rem; color: var(--muted); font-weight: 300; }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem; color: var(--black);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--black);
+    box-shadow: 0 0 0 3px rgba(13,13,13,0.06);
+  }
+  .form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
+  .form-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+  .form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a9690' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; cursor: pointer; }
+  .form-input.error { border-color: var(--accent); }
+  .form-hint { font-size: 0.72rem; color: var(--muted); margin-top: 0.35rem; }
+  .form-error { font-size: 0.72rem; color: var(--accent); margin-top: 0.35rem; display: none; }
+  .form-error.show { display: block; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+  /* Character count */
+  .char-count { font-size: 0.7rem; color: var(--muted); }
+  .char-count.warn { color: var(--accent); }
+
+  /* ── CATEGORY PICKER ── */
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.6rem;
+  }
+  .cat-option {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .cat-option:hover { border-color: #aaa; }
+  .cat-option.selected { border-color: var(--black); background: var(--black); }
+  .cat-option.selected .cat-label { color: var(--white); }
+  .cat-emoji { font-size: 1.3rem; display: block; margin-bottom: 0.3rem; }
+  .cat-label { font-size: 0.72rem; font-weight: 500; color: var(--black); }
+
+  /* ── IMAGE UPLOAD ── */
+  .upload-zone {
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    background: var(--card);
+  }
+  .upload-zone:hover { border-color: var(--black); background: var(--surface); }
+  .upload-zone.has-image { border-style: solid; border-color: var(--black); padding: 0; overflow: hidden; }
+  .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .upload-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+  .upload-label { font-size: 0.875rem; font-weight: 500; color: var(--black); margin-bottom: 0.25rem; }
+  .upload-sub { font-size: 0.75rem; color: var(--muted); }
+  .upload-preview { width: 100%; height: 200px; object-fit: cover; display: none; border-radius: 8px; }
+  .upload-preview.show { display: block; }
+
+  /* ── DATE TIME INPUTS ── */
+  input[type="date"], input[type="time"] {
+    width: 100%;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem; color: var(--black);
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+  input[type="date"]:focus, input[type="time"]:focus { border-color: var(--black); }
+
+  /* ── TICKET TYPES BUILDER ── */
+  .ticket-builder { display: flex; flex-direction: column; gap: 0.85rem; }
+
+  .ticket-type-row {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--card);
+  }
+
+  .ticket-type-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.85rem 1rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+
+  .ticket-type-head-left { display: flex; align-items: center; gap: 0.75rem; }
+  .ticket-type-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--black); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 600; flex-shrink: 0;
+  }
+  .ticket-type-name-label { font-size: 0.85rem; font-weight: 500; }
+  .ticket-type-price-label { font-size: 0.78rem; color: var(--muted); }
+
+  .ticket-type-actions { display: flex; align-items: center; gap: 0.5rem; }
+  .icon-btn {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: none; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 0.8rem;
+    transition: all 0.15s;
+  }
+  .icon-btn:hover { background: var(--black); border-color: var(--black); color: var(--white); }
+  .icon-btn.danger:hover { background: var(--accent); border-color: var(--accent); color: var(--white); }
+
+  .ticket-type-body { padding: 1rem; display: none; }
+  .ticket-type-body.open { display: block; }
+
+  .add-ticket-btn {
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    padding: 0.75rem;
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    font-size: 0.85rem; font-weight: 500;
+    color: var(--muted);
+    cursor: pointer; background: none;
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .add-ticket-btn:hover { border-color: var(--black); color: var(--black); }
+
+  /* Free toggle */
+  .free-toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+  .toggle-wrap { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; }
+  .toggle {
+    position: relative; width: 36px; height: 20px;
+    background: var(--border); border-radius: 100px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .toggle.on { background: var(--black); }
+  .toggle::after {
+    content: ''; position: absolute;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #fff; top: 3px; left: 3px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle.on::after { transform: translateX(16px); }
+
+  /* ── STEP NAV BUTTONS ── */
+  .step-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 2.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.7rem 1.5rem; border-radius: 100px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500;
+    cursor: pointer; border: none; transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-dark { background: var(--black); color: var(--white); }
+  .btn-dark:hover { background: #2a2a2a; }
+  .btn-accent { background: var(--accent); color: #fff; }
+  .btn-accent:hover { background: var(--accent-dark); }
+  .btn-outline { background: transparent; color: var(--black); border: 1.5px solid var(--border); }
+  .btn-outline:hover { border-color: var(--black); }
+  .btn-ghost { background: transparent; color: var(--muted); border: none; font-size: 0.82rem; }
+  .btn-ghost:hover { color: var(--black); }
+
+  /* ── PREVIEW SIDEBAR ── */
+  .preview-sidebar {
+    border-left: 1px solid var(--border);
+    padding: 2rem 1.5rem;
+    position: sticky; top: 60px;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+
+  .preview-label {
+    font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1.25rem;
+  }
+
+  .preview-card {
+    border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+    background: var(--card);
+  }
+
+  .preview-thumb {
+    height: 130px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem;
+    background: linear-gradient(145deg, #1a1a2e, #16213e);
+    position: relative;
+  }
+
+  .preview-badge {
+    position: absolute; top: 0.6rem; left: 0.6rem;
+    padding: 0.18rem 0.6rem; border-radius: 100px;
+    font-size: 0.62rem; font-weight: 500;
+    background: rgba(0,0,0,0.65); color: #f9c74f;
+    letter-spacing: 0.05em;
+  }
+
+  .preview-body { padding: 0.85rem; }
+  .preview-name { font-size: 0.9rem; font-weight: 500; line-height: 1.3; margin-bottom: 0.4rem; color: var(--black); }
+  .preview-meta { font-size: 0.72rem; color: var(--muted); }
+  .preview-meta-row { margin-bottom: 0.2rem; }
+
+  .preview-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.7rem 0.85rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .preview-price { font-family: 'DM Serif Display', serif; font-size: 1rem; }
+  .preview-price-label { font-size: 0.65rem; color: var(--muted); display: block; font-family: 'DM Sans', sans-serif; font-weight: 300; }
+
+  .preview-placeholder {
+    font-size: 0.78rem; color: var(--muted);
+    font-style: italic; opacity: 0.7;
+  }
+
+  /* ── SUCCESS ── */
+  .success-screen {
+    display: none; text-align: center;
+    padding: 5rem 3rem;
+  }
+  .success-screen.show { display: block; }
+  .success-icon-wrap {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: #eaf5ee;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; margin: 0 auto 1.5rem;
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .success-title { font-family: 'DM Serif Display', serif; font-size: 2rem; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+  .success-sub { font-size: 0.9rem; color: var(--muted); max-width: 38ch; margin: 0 auto 2rem; line-height: 1.7; }
+  .success-actions { display: flex; flex-direction: column; gap: 0.75rem; max-width: 300px; margin: 0 auto; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 960px) {
+    .page-layout { grid-template-columns: 1fr; }
+    .steps-sidebar, .preview-sidebar { display: none; }
+    .form-area { padding: 2rem 5%; max-width: 100%; }
+    .cat-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .form-row, .form-row-3 { grid-template-columns: 1fr; }
+    .cat-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .form-step.active { animation: fadeUp 0.35s ease; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="nuffseats-app.html" class="logo">NUFF<span>SEATS</span></a>
+  <div class="nav-right">
+    <span>Draft auto-saved</span>
+    <a href="#" class="btn btn-outline" style="padding:0.4rem 1rem;font-size:0.78rem;">Preview</a>
+  </div>
+</nav>
+
+<!-- PAGE LAYOUT -->
+<div class="page-layout">
+
+  <!-- STEPS SIDEBAR -->
+  <div class="steps-sidebar">
+    <div class="steps-label">Create event</div>
+
+    <div class="step-item active" id="nav1" onclick="goToStep(1)">
+      <div>
+        <div class="step-dot" id="dot1">1</div>
+      </div>
+      <div>
+        <div class="step-text-title">Basic info</div>
+        <div class="step-text-sub">Name, category, description</div>
+      </div>
+    </div>
+    <div class="step-connector"></div>
+
+    <div class="step-item" id="nav2" onclick="goToStep(2)">
+      <div>
+        <div class="step-dot" id="dot2">2</div>
+      </div>
+      <div>
+        <div class="step-text-title">Date & venue</div>
+        <div class="step-text-sub">When and where</div>
+      </div>
+    </div>
+    <div class="step-connector"></div>
+
+    <div class="step-item" id="nav3" onclick="goToStep(3)">
+      <div>
+        <div class="step-dot" id="dot3">3</div>
+      </div>
+      <div>
+        <div class="step-text-title">Tickets</div>
+        <div class="step-text-sub">Types, pricing, capacity</div>
+      </div>
+    </div>
+    <div class="step-connector"></div>
+
+    <div class="step-item" id="nav4" onclick="goToStep(4)">
+      <div>
+        <div class="step-dot" id="dot4">4</div>
+      </div>
+      <div>
+        <div class="step-text-title">Media</div>
+        <div class="step-text-sub">Cover image</div>
+      </div>
+    </div>
+    <div class="step-connector"></div>
+
+    <div class="step-item" id="nav5" onclick="goToStep(5)">
+      <div>
+        <div class="step-dot" id="dot5">5</div>
+      </div>
+      <div>
+        <div class="step-text-title">Review & publish</div>
+        <div class="step-text-sub">Go live</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN FORM -->
+  <div class="form-area">
+
+    <!-- ── STEP 1: BASIC INFO ── -->
+    <div class="form-step active" id="step1">
+      <div class="step-heading">
+        <div class="step-eyebrow">Step 1 of 5</div>
+        <h1 class="step-title">Tell us about your event</h1>
+        <p class="step-desc">Start with the basics — you can always edit these later.</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Event name
+          <span class="char-count" id="nameCount">0 / 80</span>
+        </label>
+        <input type="text" class="form-input" id="eventName" placeholder="e.g. Night of 1000 Laughs" maxlength="80"
+          oninput="updateChar('eventName','nameCount',80); updatePreview()">
+        <div class="form-error" id="nameErr">Please enter an event name</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <div class="cat-grid" id="catGrid">
+          <div class="cat-option" data-cat="music" onclick="selectCat(this)"><span class="cat-emoji">🎶</span><span class="cat-label">Music</span></div>
+          <div class="cat-option" data-cat="comedy" onclick="selectCat(this)"><span class="cat-emoji">😂</span><span class="cat-label">Comedy</span></div>
+          <div class="cat-option" data-cat="tech" onclick="selectCat(this)"><span class="cat-emoji">💻</span><span class="cat-label">Tech</span></div>
+          <div class="cat-option" data-cat="party" onclick="selectCat(this)"><span class="cat-emoji">🎉</span><span class="cat-label">Party</span></div>
+          <div class="cat-option" data-cat="food" onclick="selectCat(this)"><span class="cat-emoji">🍽</span><span class="cat-label">Food</span></div>
+          <div class="cat-option" data-cat="sports" onclick="selectCat(this)"><span class="cat-emoji">⚽</span><span class="cat-label">Sports</span></div>
+          <div class="cat-option" data-cat="arts" onclick="selectCat(this)"><span class="cat-emoji">🎨</span><span class="cat-label">Arts</span></div>
+          <div class="cat-option" data-cat="business" onclick="selectCat(this)"><span class="cat-emoji">💼</span><span class="cat-label">Business</span></div>
+        </div>
+        <div class="form-error" id="catErr">Please select a category</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Description
+          <span class="char-count" id="descCount">0 / 1000</span>
+        </label>
+        <textarea class="form-textarea" id="eventDesc" placeholder="What makes your event special? Tell attendees what to expect..." maxlength="1000" rows="5"
+          oninput="updateChar('eventDesc','descCount',1000)"></textarea>
+        <div class="form-hint">Tip: be specific — mention artists, themes, dress code, age restriction.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Age restriction
+          <span class="form-label-opt">Optional</span>
+        </label>
+        <select class="form-select" id="ageRestriction">
+          <option value="">No restriction</option>
+          <option value="18+">18+ only</option>
+          <option value="16+">16+ only</option>
+          <option value="21+">21+ only</option>
+          <option value="all">All ages welcome</option>
+        </select>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-ghost" onclick="saveDraft()">Save draft</button>
+        <button class="btn btn-dark" onclick="nextStep(1)">Next: Date & venue →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 2: DATE & VENUE ── -->
+    <div class="form-step" id="step2">
+      <div class="step-heading">
+        <div class="step-eyebrow">Step 2 of 5</div>
+        <h1 class="step-title">When and where?</h1>
+        <p class="step-desc">Set your event date, time and location.</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Start date</label>
+          <input type="date" id="startDate" oninput="updatePreview()">
+          <div class="form-error" id="dateErr">Please set a start date</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">End date <span class="form-label-opt">Optional</span></label>
+          <input type="date" id="endDate">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Doors open</label>
+          <input type="time" id="doorsTime" value="18:30">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Show starts</label>
+          <input type="time" id="startTime" value="20:00" oninput="updatePreview()">
+          <div class="form-error" id="timeErr">Please set a start time</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Venue name</label>
+        <input type="text" class="form-input" id="venueName" placeholder="e.g. Eko Hotel & Suites" oninput="updatePreview()">
+        <div class="form-error" id="venueErr">Please enter a venue name</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Venue address</label>
+        <input type="text" class="form-input" id="venueAddress" placeholder="Full address including area">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">City</label>
+          <select class="form-select" id="eventCity" onchange="updatePreview()">
+            <option value="">Select city</option>
+            <option value="Lagos">Lagos</option>
+            <option value="Abuja">Abuja</option>
+            <option value="Port Harcourt">Port Harcourt</option>
+            <option value="Ibadan">Ibadan</option>
+            <option value="Kano">Kano</option>
+            <option value="Enugu">Enugu</option>
+            <option value="Benin City">Benin City</option>
+            <option value="Warri">Warri</option>
+            <option value="Calabar">Calabar</option>
+            <option value="Other">Other</option>
+          </select>
+          <div class="form-error" id="cityErr">Please select a city</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">State</label>
+          <input type="text" class="form-input" id="eventState" placeholder="e.g. Lagos State">
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-outline" onclick="prevStep(2)">← Back</button>
+        <button class="btn btn-dark" onclick="nextStep(2)">Next: Tickets →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 3: TICKETS ── -->
+    <div class="form-step" id="step3">
+      <div class="step-heading">
+        <div class="step-eyebrow">Step 3 of 5</div>
+        <h1 class="step-title">Set up your tickets</h1>
+        <p class="step-desc">Add one or more ticket types. You can always add more later.</p>
+      </div>
+
+      <div class="ticket-builder" id="ticketBuilder"></div>
+
+      <button class="add-ticket-btn" onclick="addTicketType()" style="margin-top:0.85rem;">
+        + Add ticket type
+      </button>
+
+      <div class="form-group" style="margin-top:1.5rem;">
+        <label class="form-label">
+          Total capacity
+          <span class="form-label-opt">Optional — leave blank for unlimited</span>
+        </label>
+        <input type="number" class="form-input" id="totalCapacity" placeholder="e.g. 500" min="1">
+        <div class="form-hint">Maximum number of tickets that can be sold across all ticket types.</div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-outline" onclick="prevStep(3)">← Back</button>
+        <button class="btn btn-dark" onclick="nextStep(3)">Next: Media →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 4: MEDIA ── -->
+    <div class="form-step" id="step4">
+      <div class="step-heading">
+        <div class="step-eyebrow">Step 4 of 5</div>
+        <h1 class="step-title">Add a cover image</h1>
+        <p class="step-desc">A great image gets more clicks. Use a landscape photo (1600 × 900px recommended).</p>
+      </div>
+
+      <div class="form-group">
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('imageInput').click()">
+          <input type="file" id="imageInput" accept="image/*" style="display:none" onchange="handleImageUpload(event)">
+          <div id="uploadPrompt">
+            <div class="upload-icon">🖼</div>
+            <div class="upload-label">Click to upload cover image</div>
+            <div class="upload-sub">PNG, JPG or WEBP · Max 5MB · 1600×900px recommended</div>
+          </div>
+          <img id="uploadPreview" class="upload-preview" alt="Cover preview">
+        </div>
+        <div class="form-hint" style="margin-top:0.5rem;">This image appears on the event listing and detail page.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Dress code
+          <span class="form-label-opt">Optional</span>
+        </label>
+        <input type="text" class="form-input" id="dressCode" placeholder="e.g. Smart casual, All black, Beach vibes">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Additional notes for attendees
+          <span class="form-label-opt">Optional</span>
+        </label>
+        <textarea class="form-textarea" id="attendeeNotes" placeholder="Anything else attendees should know — parking, bag policy, what to bring..." rows="3"></textarea>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-outline" onclick="prevStep(4)">← Back</button>
+        <button class="btn btn-dark" onclick="nextStep(4)">Next: Review →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 5: REVIEW ── -->
+    <div class="form-step" id="step5">
+      <div class="step-heading">
+        <div class="step-eyebrow">Step 5 of 5</div>
+        <h1 class="step-title">Review & publish</h1>
+        <p class="step-desc">Check everything looks right before going live.</p>
+      </div>
+
+      <div id="reviewContent"></div>
+
+      <div style="margin-top:2rem;padding:1.25rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);">
+        <p style="font-size:0.82rem;font-weight:500;margin-bottom:0.4rem;">Ready to publish?</p>
+        <p style="font-size:0.78rem;color:var(--muted);line-height:1.6;">Your event will go live immediately on NUFFSEATS. Tickets will be available for purchase. You can pause or edit your event from the organizer dashboard at any time.</p>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn btn-outline" onclick="prevStep(5)">← Back</button>
+        <button class="btn btn-accent" onclick="publishEvent()">🚀 Publish event</button>
+      </div>
+    </div>
+
+    <!-- ── SUCCESS ── -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon-wrap">🎉</div>
+      <h1 class="success-title">Your event is live!</h1>
+      <p class="success-sub">Your event has been published on NUFFSEATS. Share the link and start selling tickets.</p>
+      <div class="success-actions">
+        <button class="btn btn-dark" style="width:100%;justify-content:center;" onclick="copyEventLink()">Copy event link</button>
+        <a href="nuffseats-organizer-dashboard.html" class="btn btn-outline" style="width:100%;justify-content:center;">Go to dashboard</a>
+        <a href="#" class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="resetForm()">Create another event</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PREVIEW SIDEBAR -->
+  <div class="preview-sidebar">
+    <div class="preview-label">Live preview</div>
+    <div class="preview-card">
+      <div class="preview-thumb" id="previewThumb">
+        <span id="previewEmoji">🎪</span>
+        <div class="preview-badge" id="previewBadge">Event</div>
+      </div>
+      <div class="preview-body">
+        <div class="preview-name" id="previewName"><span class="preview-placeholder">Event name will appear here</span></div>
+        <div class="preview-meta">
+          <div class="preview-meta-row" id="previewDate">📅 Date not set</div>
+          <div class="preview-meta-row" id="previewVenue">📍 Venue not set</div>
+        </div>
+      </div>
+      <div class="preview-footer">
+        <div>
+          <div class="preview-price" id="previewPrice">—</div>
+          <span class="preview-price-label">from</span>
+        </div>
+        <div style="background:var(--black);color:var(--white);padding:0.35rem 0.85rem;border-radius:100px;font-size:0.72rem;font-weight:500;">Get tickets</div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.25rem;padding:1rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);">
+      <p style="font-size:0.72rem;font-weight:500;color:var(--black);margin-bottom:0.35rem;">Organizer tips</p>
+      <p style="font-size:0.7rem;color:var(--muted);line-height:1.6;" id="tipText">
+        Events with a clear name, good cover image, and detailed description sell 3× more tickets.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── STATE ──
+  let currentStep = 1;
+  let selectedCategory = "";
+  let ticketTypes = [];
+  let ticketCounter = 0;
+
+  const TIPS = [
+    "Events with a clear name, good cover image, and detailed description sell 3× more tickets.",
+    "Set your doors-open time 1.5–2 hours before the show — it reduces gate congestion.",
+    "Add at least 2 ticket tiers (General + VIP). Tiered pricing increases average revenue by 40%.",
+    "Upload a 1600×900px cover image for best results across all devices.",
+    "Double-check your venue address — wrong addresses lead to unhappy attendees.",
+  ];
+
+  // ── STEP NAVIGATION ──
+  function goToStep(n) {
+    if (n > currentStep) return; // only go back freely
+    navigateToStep(n);
+  }
+
+  function nextStep(from) {
+    if (!validateStep(from)) return;
+    markDone(from);
+    navigateToStep(from + 1);
+    if (from + 1 === 5) buildReview();
+  }
+
+  function prevStep(from) {
+    navigateToStep(from - 1);
+  }
+
+  function navigateToStep(n) {
+    document.querySelectorAll(".form-step").forEach(s => s.classList.remove("active"));
+    document.getElementById("step" + n).classList.add("active");
+
+    document.querySelectorAll(".step-item").forEach((el, i) => {
+      el.classList.remove("active");
+      if (i + 1 === n) el.classList.add("active");
+    });
+
+    currentStep = n;
+    document.getElementById("tipText").textContent = TIPS[n - 1] || TIPS[0];
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function markDone(n) {
+    const dot = document.getElementById("dot" + n);
+    dot.textContent = "✓";
+    document.getElementById("nav" + n).classList.add("done");
+    document.getElementById("nav" + n).classList.remove("active");
+  }
+
+  // ── VALIDATION ──
+  function validateStep(n) {
+    let ok = true;
+    if (n === 1) {
+      const name = document.getElementById("eventName").value.trim();
+      if (!name) { show("nameErr"); document.getElementById("eventName").classList.add("error"); ok = false; }
+      else { hide("nameErr"); document.getElementById("eventName").classList.remove("error"); }
+      if (!selectedCategory) { show("catErr"); ok = false; }
+      else hide("catErr");
+    }
+    if (n === 2) {
+      const date = document.getElementById("startDate").value;
+      const venue = document.getElementById("venueName").value.trim();
+      const city  = document.getElementById("eventCity").value;
+      if (!date) { show("dateErr"); ok = false; } else hide("dateErr");
+      if (!venue) { show("venueErr"); ok = false; } else hide("venueErr");
+      if (!city) { show("cityErr"); ok = false; } else hide("cityErr");
+    }
+    if (n === 3) {
+      if (ticketTypes.length === 0) {
+        alert("Please add at least one ticket type.");
+        ok = false;
+      }
+    }
+    return ok;
+  }
+
+  function show(id) { document.getElementById(id).classList.add("show"); }
+  function hide(id) { document.getElementById(id).classList.remove("show"); }
+
+  // ── CATEGORY SELECTION ──
+  function selectCat(el) {
+    document.querySelectorAll(".cat-option").forEach(c => c.classList.remove("selected"));
+    el.classList.add("selected");
+    selectedCategory = el.dataset.cat;
+    hide("catErr");
+    updatePreview();
+  }
+
+  // ── TICKET TYPES ──
+  const CAT_EMOJIS = { music:"🎶", comedy:"😂", tech:"💻", party:"🎉", food:"🍽", sports:"⚽", arts:"🎨", business:"💼" };
+
+  function addTicketType() {
+    ticketCounter++;
+    const id = ticketCounter;
+    ticketTypes.push({ id, name: "", price: 0, capacity: "", free: false, open: true });
+
+    const builder = document.getElementById("ticketBuilder");
+    const div = document.createElement("div");
+    div.className = "ticket-type-row";
+    div.id = "tt-" + id;
+    div.innerHTML = `
+      <div class="ticket-type-head" onclick="toggleTicketBody(${id})">
+        <div class="ticket-type-head-left">
+          <div class="ticket-type-num">${id}</div>
+          <div>
+            <div class="ticket-type-name-label" id="tt-name-label-${id}">New ticket type</div>
+            <div class="ticket-type-price-label" id="tt-price-label-${id}">Set price below</div>
+          </div>
+        </div>
+        <div class="ticket-type-actions">
+          <button class="icon-btn danger" onclick="event.stopPropagation();removeTicket(${id})" title="Remove">✕</button>
+        </div>
+      </div>
+      <div class="ticket-type-body open" id="tt-body-${id}">
+        <div class="form-row" style="margin-bottom:1rem;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Ticket name</label>
+            <input type="text" class="form-input" id="tt-name-${id}" placeholder="e.g. General Admission, VIP"
+              oninput="syncTicketLabel(${id})">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Capacity</label>
+            <input type="number" class="form-input" id="tt-cap-${id}" placeholder="Unlimited" min="1">
+          </div>
+        </div>
+        <div class="free-toggle-row">
+          <label class="form-label" style="margin:0;">Price</label>
+          <div class="toggle-wrap">
+            <span style="font-size:0.78rem;color:var(--muted);">Free event</span>
+            <div class="toggle" id="tt-toggle-${id}" onclick="toggleFree(${id})"></div>
+          </div>
+        </div>
+        <div id="tt-price-wrap-${id}">
+          <div style="position:relative;">
+            <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);font-size:0.9rem;color:var(--muted);pointer-events:none;">₦</span>
+            <input type="number" class="form-input" id="tt-price-${id}" placeholder="0" min="0"
+              style="padding-left:2rem;"
+              oninput="syncTicketLabel(${id}); updatePreviewPrice()">
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:1rem;margin-bottom:0;">
+          <label class="form-label">Description <span class="form-label-opt">Optional</span></label>
+          <input type="text" class="form-input" id="tt-desc-${id}" placeholder="What's included with this ticket?">
+        </div>
+      </div>`;
+    builder.appendChild(div);
+    updatePreviewPrice();
+  }
+
+  function removeTicket(id) {
+    document.getElementById("tt-" + id).remove();
+    ticketTypes = ticketTypes.filter(t => t.id !== id);
+    updatePreviewPrice();
+  }
+
+  function toggleTicketBody(id) {
+    const body = document.getElementById("tt-body-" + id);
+    body.classList.toggle("open");
+  }
+
+  function toggleFree(id) {
+    const toggle = document.getElementById("tt-toggle-" + id);
+    const wrap   = document.getElementById("tt-price-wrap-" + id);
+    toggle.classList.toggle("on");
+    const isFree = toggle.classList.contains("on");
+    wrap.style.display = isFree ? "none" : "block";
+    if (isFree) {
+      document.getElementById("tt-price-" + id).value = "0";
+      document.getElementById("tt-price-label-" + id).textContent = "Free";
+    }
+    updatePreviewPrice();
+  }
+
+  function syncTicketLabel(id) {
+    const name  = document.getElementById("tt-name-" + id).value.trim() || "New ticket type";
+    const price = document.getElementById("tt-price-" + id).value;
+    document.getElementById("tt-name-label-" + id).textContent = name;
+    document.getElementById("tt-price-label-" + id).textContent = price ? "₦" + parseInt(price).toLocaleString() : "Set price below";
+  }
+
+  // ── PREVIEW ──
+  const CAT_LABELS = { music:"Music", comedy:"Comedy", tech:"Tech", party:"Party", food:"Food", sports:"Sports", arts:"Arts", business:"Business" };
+
+  function updatePreview() {
+    const name  = document.getElementById("eventName").value.trim();
+    const date  = document.getElementById("startDate")?.value;
+    const venue = document.getElementById("venueName")?.value.trim();
+    const city  = document.getElementById("eventCity")?.value;
+    const time  = document.getElementById("startTime")?.value;
+
+    document.getElementById("previewName").innerHTML = name || '<span class="preview-placeholder">Event name will appear here</span>';
+
+    // Category badge + emoji
+    if (selectedCategory) {
+      document.getElementById("previewBadge").textContent = CAT_LABELS[selectedCategory] || selectedCategory;
+      document.getElementById("previewEmoji").textContent = CAT_EMOJIS[selectedCategory] || "🎪";
+    }
+
+    // Date
+    if (date) {
+      const d = new Date(date + "T00:00");
+      const formatted = d.toLocaleDateString("en-NG", { weekday:"short", day:"numeric", month:"short", year:"numeric" });
+      const t = time ? " · " + formatTime(time) : "";
+      document.getElementById("previewDate").textContent = "📅 " + formatted + t;
+    }
+
+    // Venue
+    if (venue || city) {
+      document.getElementById("previewVenue").textContent = "📍 " + [venue, city].filter(Boolean).join(", ");
+    }
+  }
+
+  function updatePreviewPrice() {
+    let minPrice = Infinity;
+    document.querySelectorAll("[id^='tt-price-']").forEach(input => {
+      const val = parseInt(input.value);
+      if (!isNaN(val) && val < minPrice) minPrice = val;
+    });
+    const el = document.getElementById("previewPrice");
+    if (minPrice === Infinity || minPrice === 0) {
+      el.textContent = "Free";
+      el.style.color = "var(--accent)";
+    } else {
+      el.textContent = "₦" + minPrice.toLocaleString();
+      el.style.color = "var(--black)";
+    }
+  }
+
+  function formatTime(t) {
+    const [h, m] = t.split(":").map(Number);
+    const ampm = h >= 12 ? "PM" : "AM";
+    const hour = h % 12 || 12;
+    return `${hour}:${String(m).padStart(2,"0")} ${ampm}`;
+  }
+
+  // ── CHAR COUNT ──
+  function updateChar(inputId, countId, max) {
+    const len = document.getElementById(inputId).value.length;
+    const el  = document.getElementById(countId);
+    el.textContent = `${len} / ${max}`;
+    el.classList.toggle("warn", len > max * 0.85);
+  }
+
+  // ── IMAGE UPLOAD ──
+  function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { alert("Image must be under 5MB"); return; }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const preview = document.getElementById("uploadPreview");
+      preview.src = ev.target.result;
+      preview.classList.add("show");
+      document.getElementById("uploadPrompt").style.display = "none";
+      document.getElementById("uploadZone").classList.add("has-image");
+
+      // Also update preview sidebar thumbnail
+      document.getElementById("previewThumb").style.backgroundImage = `url(${ev.target.result})`;
+      document.getElementById("previewThumb").style.backgroundSize = "cover";
+      document.getElementById("previewThumb").style.backgroundPosition = "center";
+      document.getElementById("previewEmoji").style.display = "none";
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ── REVIEW BUILD ──
+  function buildReview() {
+    const name    = document.getElementById("eventName").value;
+    const date    = document.getElementById("startDate").value;
+    const time    = document.getElementById("startTime").value;
+    const doors   = document.getElementById("doorsTime").value;
+    const venue   = document.getElementById("venueName").value;
+    const city    = document.getElementById("eventCity").value;
+    const desc    = document.getElementById("eventDesc").value;
+    const age     = document.getElementById("ageRestriction").value;
+
+    // Collect tickets
+    const tickets = [];
+    document.querySelectorAll("[id^='tt-name-']:not([id*='label'])").forEach(input => {
+      const ttId = input.id.split("-")[2];
+      const tname  = input.value || "Unnamed";
+      const tprice = document.getElementById("tt-price-" + ttId)?.value;
+      const tcap   = document.getElementById("tt-cap-" + ttId)?.value;
+      tickets.push({ name: tname, price: tprice, cap: tcap });
+    });
+
+    const rows = (label, val) => val ? `
+      <div style="display:flex;justify-content:space-between;padding:0.7rem 0;border-bottom:1px solid var(--border);font-size:0.85rem;">
+        <span style="color:var(--muted);">${label}</span>
+        <span style="font-weight:500;text-align:right;max-width:60%;">${val}</span>
+      </div>` : "";
+
+    let ticketHTML = tickets.map(t => `
+      <div style="padding:0.75rem;background:var(--surface);border-radius:8px;margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:0.85rem;font-weight:500;">${t.name}</span>
+        <div style="text-align:right;">
+          <div style="font-size:0.85rem;font-weight:500;">${t.price && t.price > 0 ? "₦"+parseInt(t.price).toLocaleString() : "Free"}</div>
+          ${t.cap ? `<div style="font-size:0.72rem;color:var(--muted);">${t.cap} tickets</div>` : '<div style="font-size:0.72rem;color:var(--muted);">Unlimited</div>'}
+        </div>
+      </div>`).join("");
+
+    document.getElementById("reviewContent").innerHTML = `
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:1.5rem;">
+        <div style="padding:1rem 1.25rem;background:var(--surface);border-bottom:1px solid var(--border);font-size:0.78rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Event details</div>
+        <div style="padding:0 1.25rem;">
+          ${rows("Event name", name)}
+          ${rows("Category", CAT_LABELS[selectedCategory] || selectedCategory)}
+          ${rows("Date", date ? new Date(date+"T00:00").toLocaleDateString("en-NG",{weekday:"long",day:"numeric",month:"long",year:"numeric"}) : "")}
+          ${rows("Start time", time ? formatTime(time) + (doors ? " (Doors " + formatTime(doors) + ")" : "") : "")}
+          ${rows("Venue", [venue, city].filter(Boolean).join(", "))}
+          ${rows("Age restriction", age || "None")}
+          ${rows("Description", desc ? desc.slice(0, 120) + (desc.length > 120 ? "…" : "") : "")}
+        </div>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+        <div style="padding:1rem 1.25rem;background:var(--surface);border-bottom:1px solid var(--border);font-size:0.78rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Tickets</div>
+        <div style="padding:1rem 1.25rem;">${ticketHTML || '<p style="font-size:0.85rem;color:var(--muted);">No tickets added</p>'}</div>
+      </div>`;
+  }
+
+  // ── PUBLISH ──
+  function publishEvent() {
+    const btn = document.querySelector("#step5 .btn-accent");
+    btn.textContent = "Publishing…";
+    btn.disabled = true;
+
+    setTimeout(() => {
+      document.getElementById("step5").style.display = "none";
+      document.getElementById("successScreen").classList.add("show");
+      // Mark all steps done
+      for (let i = 1; i <= 5; i++) markDone(i);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 1800);
+  }
+
+  function saveDraft() {
+    const btn = document.querySelector("#step1 .btn-ghost");
+    btn.textContent = "✓ Draft saved";
+    setTimeout(() => btn.textContent = "Save draft", 2000);
+  }
+
+  function copyEventLink() {
+    navigator.clipboard.writeText("https://nuffseats.ng/e/burna-boy-live-lagos").then(() => {
+      alert("Event link copied!");
+    });
+  }
+
+  function resetForm() { location.reload(); }
+
+  // ── INIT: add first ticket type ──
+  addTicketType();
+</script>
+</body>
+</html>

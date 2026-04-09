@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Burna Boy — Live in Lagos · NUFFSEATS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0d0d0d;
+    --white: #f7f5f0;
+    --accent: #e8452a;
+    --accent-dark: #c03520;
+    --muted: #9a9690;
+    --border: #e0ddd7;
+    --card: #ffffff;
+    --surface: #f0ede8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; height: 60px;
+    background: rgba(247,245,240,0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem; letter-spacing: -0.02em;
+    color: var(--black); text-decoration: none;
+  }
+  .logo span { color: var(--accent); }
+
+  .nav-back {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.82rem; color: var(--muted);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--black); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.5rem 1.1rem; border-radius: 100px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500;
+    text-decoration: none; cursor: pointer; border: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-dark { background: var(--black); color: var(--white); }
+  .btn-dark:hover { background: #2a2a2a; }
+  .btn-outline { background: transparent; color: var(--black); border: 1.5px solid var(--border); }
+  .btn-outline:hover { border-color: var(--black); }
+
+  /* ── HERO BANNER ── */
+  .event-hero {
+    position: relative;
+    height: 420px;
+    overflow: hidden;
+    display: flex; align-items: flex-end;
+  }
+
+  .event-hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(145deg, #0a0018, #1a0040, #2d0060);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8rem;
+    transition: transform 0.6s ease;
+  }
+
+  .event-hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(13,13,13,0.92) 0%, rgba(13,13,13,0.3) 50%, transparent 100%);
+  }
+
+  .event-hero-content {
+    position: relative; z-index: 2;
+    padding: 2.5rem 5%;
+    width: 100%;
+  }
+
+  .event-cat-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.25rem 0.8rem; border-radius: 100px;
+    font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    background: var(--accent); color: #fff;
+    margin-bottom: 0.75rem;
+    opacity: 0; animation: fadeUp 0.5s ease 0.1s forwards;
+  }
+
+  .event-hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.05; letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 1rem;
+    opacity: 0; animation: fadeUp 0.55s ease 0.2s forwards;
+  }
+
+  .event-hero-meta {
+    display: flex; flex-wrap: wrap; gap: 1.25rem;
+    opacity: 0; animation: fadeUp 0.55s ease 0.35s forwards;
+  }
+
+  .hero-meta-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.85rem; color: rgba(255,255,255,0.75);
+  }
+
+  .hero-meta-item strong { color: #fff; font-weight: 500; }
+
+  /* ── LAYOUT ── */
+  .page-body {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 2.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem 5%;
+    align-items: start;
+  }
+
+  @media (max-width: 860px) {
+    .page-body { grid-template-columns: 1fr; }
+    .sticky-sidebar { position: static !important; }
+  }
+
+  /* ── LEFT CONTENT ── */
+  .content-section {
+    margin-bottom: 2.5rem;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .content-section.visible { opacity: 1; transform: none; }
+
+  .section-label {
+    font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .section-label::before { content: ''; width: 18px; height: 1px; background: var(--accent); }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem; letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .about-text {
+    font-size: 0.925rem; color: #444; line-height: 1.8;
+  }
+
+  .about-text p + p { margin-top: 1rem; }
+
+  /* read more toggle */
+  .read-more-btn {
+    background: none; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem; color: var(--accent);
+    padding: 0; margin-top: 0.5rem;
+    display: flex; align-items: center; gap: 0.3rem;
+  }
+
+  .about-extra { display: none; }
+  .about-extra.open { display: block; }
+
+  /* ── INFO GRID ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .info-cell {
+    background: var(--card);
+    padding: 1.1rem 1.25rem;
+  }
+
+  .info-cell-label {
+    font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.3rem;
+  }
+
+  .info-cell-value {
+    font-size: 0.9rem; font-weight: 500; color: var(--black);
+    line-height: 1.4;
+  }
+
+  .info-cell-sub { font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
+
+  /* ── LINEUP ── */
+  .lineup-list {
+    display: flex; flex-direction: column; gap: 0.75rem;
+  }
+
+  .lineup-item {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 0.85rem 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: border-color 0.15s;
+  }
+
+  .lineup-item:hover { border-color: var(--black); }
+
+  .lineup-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem; flex-shrink: 0;
+  }
+
+  .lineup-name { font-size: 0.9rem; font-weight: 500; }
+  .lineup-role { font-size: 0.75rem; color: var(--muted); }
+  .lineup-time { margin-left: auto; font-size: 0.78rem; color: var(--muted); }
+
+  /* ── MAP PLACEHOLDER ── */
+  .map-box {
+    height: 180px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0.5rem; color: var(--muted);
+    font-size: 0.82rem; cursor: pointer;
+    transition: border-color 0.2s;
+    text-decoration: none;
+  }
+  .map-box:hover { border-color: var(--black); }
+  .map-box-pin { font-size: 2rem; }
+  .map-box strong { color: var(--black); font-size: 0.9rem; }
+
+  /* ── FAQ ── */
+  .faq-list { display: flex; flex-direction: column; gap: 0; }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-question {
+    width: 100%; background: none; border: none;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 0; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500;
+    color: var(--black); text-align: left;
+    gap: 1rem;
+  }
+
+  .faq-icon {
+    flex-shrink: 0; width: 20px; height: 20px;
+    border-radius: 50%; background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; transition: transform 0.2s, background 0.2s;
+  }
+
+  .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--black); color: var(--white); }
+
+  .faq-answer {
+    font-size: 0.85rem; color: var(--muted); line-height: 1.75;
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.2s;
+  }
+
+  .faq-item.open .faq-answer { max-height: 200px; padding-bottom: 1rem; }
+
+  /* ── STICKY SIDEBAR ── */
+  .sticky-sidebar {
+    position: sticky;
+    top: 80px;
+  }
+
+  .ticket-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+  }
+
+  .ticket-panel-head {
+    padding: 1.4rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sold-out-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .capacity-label { font-size: 0.72rem; color: var(--muted); }
+
+  .capacity-bar {
+    height: 4px; background: var(--surface);
+    border-radius: 100px; margin-bottom: 1rem; overflow: hidden;
+  }
+
+  .capacity-fill {
+    height: 100%; background: var(--accent);
+    border-radius: 100px;
+    width: 0;
+    transition: width 1s ease;
+  }
+
+  /* Ticket types */
+  .ticket-types { padding: 1rem 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .ticket-type {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+
+  .ticket-type:hover { border-color: var(--black); }
+  .ticket-type.selected { border-color: var(--black); background: var(--surface); }
+
+  .ticket-type-name { font-size: 0.9rem; font-weight: 500; }
+  .ticket-type-desc { font-size: 0.72rem; color: var(--muted); margin-top: 0.15rem; }
+  .ticket-type-price {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem; text-align: right; flex-shrink: 0;
+  }
+  .ticket-type-price small { font-family: 'DM Sans', sans-serif; font-size: 0.65rem; color: var(--muted); display: block; font-weight: 300; }
+
+  /* Qty selector */
+  .qty-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1.5rem 1rem;
+  }
+
+  .qty-label { font-size: 0.82rem; color: var(--muted); }
+
+  .qty-control {
+    display: flex; align-items: center; gap: 0;
+    border: 1.5px solid var(--border); border-radius: 100px; overflow: hidden;
+  }
+
+  .qty-btn {
+    width: 32px; height: 32px;
+    background: none; border: none; cursor: pointer;
+    font-size: 1rem; color: var(--black);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .qty-btn:hover { background: var(--surface); }
+  .qty-num {
+    width: 32px; text-align: center;
+    font-size: 0.9rem; font-weight: 500;
+  }
+
+  /* Summary */
+  .ticket-summary {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .summary-row {
+    display: flex; justify-content: space-between;
+    font-size: 0.82rem; color: var(--muted);
+    margin-bottom: 0.35rem;
+  }
+
+  .summary-row.total {
+    font-size: 0.95rem; color: var(--black); font-weight: 500;
+    margin-top: 0.75rem; padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-bottom: 0;
+  }
+
+  .summary-row span:last-child { color: var(--black); }
+  .summary-row.total span:last-child { font-family: 'DM Serif Display', serif; font-size: 1.2rem; }
+
+  .cta-buy {
+    display: block; width: 100%;
+    background: var(--black); color: var(--white);
+    border: none; border-radius: 100px;
+    padding: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; margin: 1rem 1.5rem; width: calc(100% - 3rem);
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .cta-buy:hover { background: var(--accent); transform: translateY(-1px); }
+  .cta-buy:disabled { background: var(--muted); cursor: not-allowed; transform: none; }
+
+  .ticket-note {
+    text-align: center; font-size: 0.72rem; color: var(--muted);
+    padding: 0 1.5rem 1.25rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+  }
+
+  /* ── SHARE ROW ── */
+  .share-row {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .share-label { font-size: 0.78rem; color: var(--muted); flex: 1; }
+
+  .share-btn {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; cursor: pointer; transition: all 0.15s;
+    text-decoration: none;
+  }
+
+  .share-btn:hover { background: var(--black); border-color: var(--black); filter: invert(1); }
+
+  /* ── MOBILE STICKY BAR ── */
+  .mobile-bar {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 1rem 5%;
+    z-index: 300;
+    align-items: center; justify-content: space-between;
+    gap: 1rem;
+  }
+
+  @media (max-width: 860px) {
+    .mobile-bar { display: flex; }
+    .page-body { padding-bottom: 6rem; }
+    .sticky-sidebar { display: none; }
+  }
+
+  .mobile-price {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+  }
+  .mobile-price small { font-family: 'DM Sans', sans-serif; font-size: 0.7rem; color: var(--muted); display: block; font-weight: 300; }
+
+  .mobile-cta {
+    flex: 1; background: var(--black); color: var(--white);
+    border: none; border-radius: 100px;
+    padding: 0.8rem 1.5rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .mobile-cta:hover { background: var(--accent); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── MODAL OVERLAY ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(13,13,13,0.6);
+    backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--card);
+    border-radius: 16px;
+    width: 100%; max-width: 480px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+    overflow: hidden;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .modal-head {
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .modal-title { font-family: 'DM Serif Display', serif; font-size: 1.3rem; }
+
+  .modal-close {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--surface); border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 1rem;
+    transition: background 0.15s;
+  }
+  .modal-close:hover { background: var(--border); }
+
+  .modal-body { padding: 1.5rem; }
+
+  .form-group { margin-bottom: 1.25rem; }
+
+  .form-label { font-size: 0.8rem; font-weight: 500; color: var(--black); margin-bottom: 0.4rem; display: block; }
+
+  .form-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    color: var(--black);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input:focus { border-color: var(--black); background: var(--card); }
+  .form-input::placeholder { color: var(--muted); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+  .order-summary-mini {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.82rem;
+  }
+
+  .order-mini-row { display: flex; justify-content: space-between; color: var(--muted); margin-bottom: 0.25rem; }
+  .order-mini-row.bold { color: var(--black); font-weight: 500; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border); }
+
+  .payment-methods { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+
+  .pay-method {
+    flex: 1; min-width: 80px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.75rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    font-size: 0.78rem; font-weight: 500;
+    cursor: pointer; transition: all 0.15s; user-select: none;
+    background: var(--card);
+  }
+
+  .pay-method:hover { border-color: var(--black); }
+  .pay-method.selected { border-color: var(--black); background: var(--black); color: var(--white); }
+
+  .modal-cta {
+    width: 100%; background: var(--accent); color: #fff;
+    border: none; border-radius: 100px;
+    padding: 0.9rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .modal-cta:hover { background: var(--accent-dark); }
+
+  .secure-note {
+    text-align: center; font-size: 0.7rem; color: var(--muted);
+    margin-top: 0.75rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.35rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="nuffseats-app.html" class="nav-back">← Back to events</a>
+  <a href="#" class="logo">NUFF<span>SEATS</span></a>
+  <a href="#" class="btn btn-dark">Sign in</a>
+</nav>
+
+<!-- HERO -->
+<div class="event-hero">
+  <div class="event-hero-bg" id="heroBg">🎤</div>
+  <div class="event-hero-content">
+    <div class="event-cat-badge">🎶 Music</div>
+    <h1 class="event-hero-title">Burna Boy —<br>Live in Lagos</h1>
+    <div class="event-hero-meta">
+      <div class="hero-meta-item">📅 <strong>Saturday, 19 April 2025</strong></div>
+      <div class="hero-meta-item">🕗 <strong>8:00 PM</strong> (Doors open 6:30 PM)</div>
+      <div class="hero-meta-item">📍 <strong>Tafawa Balewa Square, Lagos Island</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE BODY -->
+<div class="page-body">
+
+  <!-- LEFT: CONTENT -->
+  <div class="left-content">
+
+    <!-- ABOUT -->
+    <div class="content-section">
+      <div class="section-label">About this event</div>
+      <div class="about-text">
+        <p>Experience the Grammy-winning Afrobeats icon Burna Boy live on stage in Lagos for a night that will go down in history. This is not just a concert — it's a homecoming celebration.</p>
+        <div class="about-extra" id="aboutExtra">
+          <p>Burna Boy's electrifying stage presence, backed by a full live band, will take you through his entire catalog — from early hits to his acclaimed recent albums. Expect surprise guest appearances, stunning production, and the kind of energy that only Lagos can match.</p>
+          <p>Doors open at 6:30 PM. Support acts begin at 7:00 PM. Main performance at 8:30 PM sharp. No refunds after entry. Valid ID required at gate.</p>
+        </div>
+        <button class="read-more-btn" id="readMoreBtn" onclick="toggleReadMore()">Read more ↓</button>
+      </div>
+    </div>
+
+    <!-- EVENT DETAILS -->
+    <div class="content-section">
+      <div class="section-label">Event details</div>
+      <div class="info-grid">
+        <div class="info-cell">
+          <div class="info-cell-label">Date</div>
+          <div class="info-cell-value">Saturday, 19 April 2025</div>
+          <div class="info-cell-sub">Doors open at 6:30 PM</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Time</div>
+          <div class="info-cell-value">8:00 PM WAT</div>
+          <div class="info-cell-sub">Show ends ~11:30 PM</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Venue</div>
+          <div class="info-cell-value">Tafawa Balewa Square</div>
+          <div class="info-cell-sub">Lagos Island, Lagos State</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Dress code</div>
+          <div class="info-cell-value">Smart casual</div>
+          <div class="info-cell-sub">No flip-flops at VIP</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Age restriction</div>
+          <div class="info-cell-value">18+ only</div>
+          <div class="info-cell-sub">Valid ID required at gate</div>
+        </div>
+        <div class="info-cell">
+          <div class="info-cell-label">Organiser</div>
+          <div class="info-cell-value">Spaceship Collective</div>
+          <div class="info-cell-sub">Verified organiser ✓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINEUP -->
+    <div class="content-section">
+      <div class="section-label">Lineup</div>
+      <div class="lineup-list">
+        <div class="lineup-item">
+          <div class="lineup-avatar" style="background:linear-gradient(135deg,#1a0040,#4a00a0)">🎤</div>
+          <div>
+            <div class="lineup-name">Burna Boy</div>
+            <div class="lineup-role">Headliner · Grammy Award Winner</div>
+          </div>
+          <div class="lineup-time">8:30 PM</div>
+        </div>
+        <div class="lineup-item">
+          <div class="lineup-avatar" style="background:linear-gradient(135deg,#001a40,#004080)">🎧</div>
+          <div>
+            <div class="lineup-name">Rema</div>
+            <div class="lineup-role">Special Guest</div>
+          </div>
+          <div class="lineup-time">7:30 PM</div>
+        </div>
+        <div class="lineup-item">
+          <div class="lineup-avatar" style="background:linear-gradient(135deg,#1a1000,#4a3000)">🎵</div>
+          <div>
+            <div class="lineup-name">DJ Neptune</div>
+            <div class="lineup-role">Opening DJ Set</div>
+          </div>
+          <div class="lineup-time">7:00 PM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENUE / MAP -->
+    <div class="content-section">
+      <div class="section-label">Venue</div>
+      <a href="https://maps.google.com/?q=Tafawa+Balewa+Square+Lagos" target="_blank" class="map-box">
+        <div class="map-box-pin">📍</div>
+        <strong>Tafawa Balewa Square</strong>
+        <span>Lagos Island, Lagos State · Open in Maps</span>
+      </a>
+    </div>
+
+    <!-- FAQ -->
+    <div class="content-section">
+      <div class="section-label">FAQs</div>
+      <div class="faq-list" id="faqList">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Can I get a refund if I can't attend?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">Tickets are non-refundable but are transferable. You can resell your ticket on NUFFSEATS up to 24 hours before the event starts.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            How do I get my ticket?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">After payment, your QR code ticket will be sent to your email and phone number instantly. Show the QR code at the gate — no printing needed.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            Is parking available at the venue?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">Limited parking is available on-site. We recommend using ride-hailing apps (Bolt, Uber) or arriving early. Overflow parking is available at Lagos Island Arena.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            What items are not allowed?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">Professional cameras, outside food and drinks, weapons of any kind, and illegal substances are not permitted. All bags are subject to search at entry.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: STICKY TICKET PANEL -->
+  <div class="sticky-sidebar">
+    <div class="ticket-panel">
+
+      <div class="ticket-panel-head">
+        <div class="sold-out-bar">
+          <span style="font-size:0.78rem;font-weight:500;">Tickets selling fast</span>
+          <span style="font-size:0.72rem;color:var(--accent);font-weight:500;">🔴 73% sold</span>
+        </div>
+        <div class="capacity-bar"><div class="capacity-fill" id="capacityFill" style="width:73%"></div></div>
+      </div>
+
+      <!-- TICKET TYPES -->
+      <div class="ticket-types" id="ticketTypes">
+        <div class="ticket-type selected" data-price="25000" data-name="General Admission" onclick="selectTicket(this)">
+          <div>
+            <div class="ticket-type-name">General Admission</div>
+            <div class="ticket-type-desc">Standing floor access</div>
+          </div>
+          <div class="ticket-type-price">₦25,000 <small>per ticket</small></div>
+        </div>
+        <div class="ticket-type" data-price="50000" data-name="VIP" onclick="selectTicket(this)">
+          <div>
+            <div class="ticket-type-name">VIP</div>
+            <div class="ticket-type-desc">Reserved seating + bar access</div>
+          </div>
+          <div class="ticket-type-price">₦50,000 <small>per ticket</small></div>
+        </div>
+        <div class="ticket-type" data-price="120000" data-name="Table (10 pax)" onclick="selectTicket(this)">
+          <div>
+            <div class="ticket-type-name">Table (10 pax)</div>
+            <div class="ticket-type-desc">Premium table + bottle service</div>
+          </div>
+          <div class="ticket-type-price">₦120,000 <small>per table</small></div>
+        </div>
+      </div>
+
+      <!-- QTY -->
+      <div class="qty-row">
+        <span class="qty-label">Quantity</span>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <span class="qty-num" id="qtyDisplay">1</span>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="ticket-summary">
+        <div class="summary-row"><span>Subtotal</span><span id="subtotalDisplay">₦25,000</span></div>
+        <div class="summary-row"><span>Service fee (5%)</span><span id="feeDisplay">₦1,250</span></div>
+        <div class="summary-row total"><span>Total</span><span id="totalDisplay">₦26,250</span></div>
+      </div>
+
+      <button class="cta-buy" id="buyBtn" onclick="openCheckout()">Get tickets →</button>
+
+      <div class="ticket-note">🔒 Secure checkout · Instant delivery</div>
+
+      <div class="share-row">
+        <span class="share-label">Share this event</span>
+        <a class="share-btn" href="#" title="Twitter">𝕏</a>
+        <a class="share-btn" href="#" title="WhatsApp">💬</a>
+        <a class="share-btn" href="#" title="Copy link" onclick="copyLink(event)">🔗</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- MOBILE STICKY BAR -->
+<div class="mobile-bar">
+  <div class="mobile-price">₦25,000 <small>from</small></div>
+  <button class="mobile-cta" onclick="openCheckout()">Get tickets →</button>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Complete your order</div>
+      <button class="modal-close" onclick="closeCheckout()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="order-summary-mini" id="orderSummaryMini">
+        <div class="order-mini-row"><span>Burna Boy — Live in Lagos</span></div>
+        <div class="order-mini-row"><span id="miniTicketType">1× General Admission</span><span id="miniSubtotal">₦25,000</span></div>
+        <div class="order-mini-row"><span>Service fee</span><span id="miniFee">₦1,250</span></div>
+        <div class="order-mini-row bold"><span>Total</span><span id="miniTotal">₦26,250</span></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Full name</label>
+        <input type="text" class="form-input" placeholder="Adaeze Johnson" id="buyerName">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" placeholder="you@email.com" id="buyerEmail">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone number</label>
+          <input type="tel" class="form-input" placeholder="080X XXX XXXX" id="buyerPhone">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Payment method</label>
+        <div class="payment-methods">
+          <div class="pay-method selected" onclick="selectPayment(this)">💳 Card</div>
+          <div class="pay-method" onclick="selectPayment(this)">🏦 Bank transfer</div>
+          <div class="pay-method" onclick="selectPayment(this)">📱 USSD</div>
+        </div>
+      </div>
+
+      <button class="modal-cta" onclick="submitOrder()">Pay now →</button>
+      <div class="secure-note">🔒 Secured by Paystack · Your data is safe</div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── State ──
+  let qty = 1;
+  let selectedPrice = 25000;
+  let selectedName = "General Admission";
+
+  const FEE_RATE = 0.05;
+
+  function fmt(n) { return "₦" + n.toLocaleString(); }
+
+  function calcFee(p) { return Math.round(p * FEE_RATE); }
+
+  function updateSummary() {
+    const sub = selectedPrice * qty;
+    const fee = calcFee(sub);
+    const total = sub + fee;
+
+    document.getElementById("subtotalDisplay").textContent = fmt(sub);
+    document.getElementById("feeDisplay").textContent = fmt(fee);
+    document.getElementById("totalDisplay").textContent = fmt(total);
+    document.getElementById("qtyDisplay").textContent = qty;
+
+    // mobile bar
+    document.querySelector(".mobile-price").innerHTML = `${fmt(selectedPrice)} <small>from</small>`;
+
+    // modal mini summary
+    document.getElementById("miniTicketType").textContent = `${qty}× ${selectedName}`;
+    document.getElementById("miniSubtotal").textContent = fmt(sub);
+    document.getElementById("miniFee").textContent = fmt(fee);
+    document.getElementById("miniTotal").textContent = fmt(total);
+  }
+
+  function selectTicket(el) {
+    document.querySelectorAll(".ticket-type").forEach(t => t.classList.remove("selected"));
+    el.classList.add("selected");
+    selectedPrice = parseInt(el.dataset.price);
+    selectedName  = el.dataset.name;
+    qty = 1;
+    updateSummary();
+  }
+
+  function changeQty(delta) {
+    qty = Math.max(1, Math.min(10, qty + delta));
+    updateSummary();
+  }
+
+  // FAQ accordion
+  function toggleFaq(btn) {
+    const item = btn.closest(".faq-item");
+    const isOpen = item.classList.contains("open");
+    document.querySelectorAll(".faq-item").forEach(i => i.classList.remove("open"));
+    if (!isOpen) item.classList.add("open");
+  }
+
+  // Read more
+  function toggleReadMore() {
+    const extra = document.getElementById("aboutExtra");
+    const btn   = document.getElementById("readMoreBtn");
+    const open  = extra.classList.toggle("open");
+    btn.textContent = open ? "Read less ↑" : "Read more ↓";
+  }
+
+  // Checkout modal
+  function openCheckout() {
+    document.getElementById("checkoutModal").classList.add("open");
+    updateSummary();
+  }
+
+  function closeCheckout() {
+    document.getElementById("checkoutModal").classList.remove("open");
+  }
+
+  // Close on backdrop click
+  document.getElementById("checkoutModal").addEventListener("click", e => {
+    if (e.target === e.currentTarget) closeCheckout();
+  });
+
+  function selectPayment(el) {
+    document.querySelectorAll(".pay-method").forEach(p => p.classList.remove("selected"));
+    el.classList.add("selected");
+  }
+
+  function submitOrder() {
+    const name  = document.getElementById("buyerName").value.trim();
+    const email = document.getElementById("buyerEmail").value.trim();
+    const phone = document.getElementById("buyerPhone").value.trim();
+
+    if (!name || !email || !phone) {
+      alert("Please fill in all fields to continue.");
+      return;
+    }
+
+    // Placeholder — will connect to Paystack/Flutterwave
+    alert(`Order placed!\n\nSummary:\n• ${qty}× ${selectedName}\n• Total: ${document.getElementById("miniTotal").textContent}\n\nIn the real app, this triggers Paystack checkout.\nYour QR ticket will be sent to ${email}.`);
+    closeCheckout();
+  }
+
+  function copyLink(e) {
+    e.preventDefault();
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      alert("Event link copied to clipboard!");
+    });
+  }
+
+  // Intersection observer for scroll reveals
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(en => { if (en.isIntersecting) en.target.classList.add("visible"); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll(".content-section").forEach(el => observer.observe(el));
+
+  // Animate capacity bar on load
+  setTimeout(() => {
+    document.getElementById("capacityFill").style.width = "73%";
+  }, 600);
+
+  // Init
+  updateSummary();
+</script>
+</body>
+</html>

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organizer Dashboard · NUFFSEATS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #0d0d0d;
+    --white: #f7f5f0;
+    --accent: #e8452a;
+    --muted: #9a9690;
+    --border: #e0ddd7;
+    --card: #ffffff;
+    --surface: #f0ede8;
+    --sidebar-w: 220px;
+    --success: #1a7a4a;
+    --success-bg: #eaf5ee;
+    --warn: #b45309;
+    --warn-bg: #fef3c7;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--surface);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--black);
+    min-height: 100vh;
+    position: fixed; top: 0; left: 0; bottom: 0;
+    display: flex; flex-direction: column;
+    z-index: 100;
+    flex-shrink: 0;
+  }
+
+  .sidebar-logo {
+    padding: 1.4rem 1.5rem 1rem;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem; letter-spacing: -0.02em;
+    color: var(--white); text-decoration: none;
+    display: block; border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 0.5rem;
+  }
+  .sidebar-logo span { color: var(--accent); }
+
+  .sidebar-section-label {
+    font-size: 0.62rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    padding: 1rem 1.5rem 0.4rem;
+  }
+
+  .sidebar-nav { flex: 1; overflow-y: auto; padding-bottom: 1rem; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.65rem 1.5rem;
+    font-size: 0.85rem; color: rgba(255,255,255,0.55);
+    text-decoration: none; cursor: pointer;
+    transition: all 0.15s; border-left: 2px solid transparent;
+    user-select: none;
+  }
+  .nav-item:hover { color: var(--white); background: rgba(255,255,255,0.05); }
+  .nav-item.active { color: var(--white); border-left-color: var(--accent); background: rgba(255,255,255,0.06); }
+  .nav-icon { font-size: 0.95rem; width: 18px; text-align: center; }
+  .nav-badge {
+    margin-left: auto; background: var(--accent); color: #fff;
+    font-size: 0.62rem; font-weight: 600;
+    padding: 0.1rem 0.45rem; border-radius: 100px; min-width: 18px; text-align: center;
+  }
+
+  .sidebar-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .org-info { display: flex; align-items: center; gap: 0.75rem; }
+  .org-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 600; color: #fff;
+    flex-shrink: 0;
+  }
+  .org-name { font-size: 0.82rem; font-weight: 500; color: var(--white); }
+  .org-plan { font-size: 0.68rem; color: rgba(255,255,255,0.4); }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+
+  .topbar-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem; letter-spacing: -0.02em;
+  }
+
+  .topbar-right { display: flex; align-items: center; gap: 0.75rem; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.55rem 1.1rem; border-radius: 100px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500;
+    cursor: pointer; border: none; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-dark { background: var(--black); color: var(--white); }
+  .btn-dark:hover { background: #2a2a2a; }
+  .btn-accent { background: var(--accent); color: #fff; }
+  .btn-accent:hover { background: #c03520; }
+  .btn-outline { background: transparent; color: var(--black); border: 1.5px solid var(--border); }
+  .btn-outline:hover { border-color: var(--black); }
+  .btn-ghost { background: transparent; color: var(--muted); border: none; font-size: 0.78rem; }
+
+  /* ── VIEWS ── */
+  .view { display: none; padding: 2rem; }
+  .view.active { display: block; }
+
+  /* ── STAT CARDS ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    transition: box-shadow 0.2s;
+  }
+  .stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+
+  .stat-label {
+    font-size: 0.7rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.6rem;
+  }
+  .stat-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.9rem; line-height: 1; letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+  }
+  .stat-delta {
+    font-size: 0.72rem;
+    display: flex; align-items: center; gap: 0.3rem;
+  }
+  .stat-delta.up { color: var(--success); }
+  .stat-delta.down { color: var(--accent); }
+  .stat-delta.neutral { color: var(--muted); }
+
+  /* ── CHART ── */
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+  .chart-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+  .chart-title { font-size: 0.9rem; font-weight: 500; }
+  .chart-meta { font-size: 0.72rem; color: var(--muted); }
+
+  .chart-tabs { display: flex; gap: 0.35rem; }
+  .chart-tab {
+    padding: 0.3rem 0.75rem; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 500;
+    cursor: pointer; border: 1px solid var(--border);
+    background: var(--card); color: var(--muted);
+    transition: all 0.15s;
+  }
+  .chart-tab.active { background: var(--black); color: var(--white); border-color: var(--black); }
+
+  .bar-chart {
+    display: flex; align-items: flex-end; gap: 6px;
+    height: 120px;
+  }
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .bar {
+    width: 100%; border-radius: 3px 3px 0 0;
+    background: var(--surface); position: relative;
+    transition: height 0.6s cubic-bezier(0.34,1.2,0.64,1), background 0.2s;
+    cursor: pointer; min-height: 4px;
+  }
+  .bar:hover { background: var(--accent) !important; }
+  .bar.highlight { background: var(--black); }
+  .bar-label { font-size: 0.62rem; color: var(--muted); white-space: nowrap; }
+
+  /* ── TWO-COL GRID ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── LIST CARD ── */
+  .list-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  .list-card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .list-card-title { font-size: 0.85rem; font-weight: 500; }
+
+  .list-row {
+    display: flex; align-items: center;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    gap: 0.75rem;
+    transition: background 0.15s;
+    cursor: default;
+  }
+  .list-row:last-child { border-bottom: none; }
+  .list-row:hover { background: var(--surface); }
+
+  .row-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 600;
+    color: #fff;
+  }
+
+  .row-name { font-size: 0.85rem; font-weight: 500; }
+  .row-sub  { font-size: 0.72rem; color: var(--muted); }
+  .row-right { margin-left: auto; text-align: right; flex-shrink: 0; }
+  .row-amount { font-size: 0.9rem; font-weight: 500; }
+  .row-time { font-size: 0.7rem; color: var(--muted); }
+
+  /* status badge */
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    padding: 0.2rem 0.65rem; border-radius: 100px;
+    font-size: 0.68rem; font-weight: 500;
+  }
+  .badge-live    { background: var(--success-bg); color: var(--success); }
+  .badge-draft   { background: var(--surface); color: var(--muted); }
+  .badge-past    { background: #f0ede8; color: #888; }
+  .badge-warn    { background: var(--warn-bg); color: var(--warn); }
+
+  /* ── EVENTS TABLE ── */
+  .events-table { width: 100%; border-collapse: collapse; }
+  .events-table th {
+    text-align: left; font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+    padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .events-table td {
+    padding: 1rem 1.25rem; font-size: 0.85rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .events-table tr:last-child td { border-bottom: none; }
+  .events-table tr:hover td { background: var(--surface); }
+  .events-table .event-name-cell { font-weight: 500; }
+  .events-table .event-sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.15rem; }
+
+  .progress-bar {
+    height: 5px; background: var(--surface);
+    border-radius: 100px; overflow: hidden; margin-top: 0.35rem;
+    min-width: 80px;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 100px;
+    background: var(--accent); transition: width 0.8s ease;
+  }
+
+  .action-btns { display: flex; gap: 0.4rem; }
+  .action-btn {
+    padding: 0.3rem 0.7rem; border-radius: 6px;
+    font-size: 0.72rem; font-weight: 500;
+    border: 1px solid var(--border); background: var(--card);
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    color: var(--black); transition: all 0.15s;
+    text-decoration: none; display: inline-flex; align-items: center;
+  }
+  .action-btn:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+
+  /* ── PAYOUT SECTION ── */
+  .payout-banner {
+    background: var(--black); color: var(--white);
+    border-radius: 10px; padding: 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap;
+  }
+  .payout-amount {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem; letter-spacing: -0.02em;
+  }
+  .payout-label { font-size: 0.72rem; color: rgba(255,255,255,0.5); margin-bottom: 0.25rem; }
+  .payout-sub { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 0.3rem; }
+
+  /* ── ATTENDEES TABLE ── */
+  .search-bar-sm {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .search-input-sm {
+    flex: 1; background: var(--card); border: 1.5px solid var(--border);
+    border-radius: 8px; padding: 0.6rem 0.9rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    color: var(--black); outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input-sm:focus { border-color: var(--black); }
+  .search-input-sm::placeholder { color: var(--muted); }
+
+  .attendees-table { width: 100%; border-collapse: collapse; }
+  .attendees-table th {
+    text-align: left; font-size: 0.68rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+    padding: 0.65rem 1rem; border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .attendees-table td {
+    padding: 0.85rem 1rem; font-size: 0.82rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .attendees-table tr:last-child td { border-bottom: none; }
+  .attendees-table tr:hover td { background: var(--surface); }
+
+  .check-in-btn {
+    padding: 0.28rem 0.75rem; border-radius: 100px;
+    font-size: 0.7rem; font-weight: 500;
+    border: 1px solid var(--border); background: var(--card);
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .check-in-btn:hover, .check-in-btn.checked { background: var(--success-bg); color: var(--success); border-color: var(--success); }
+  .check-in-btn.checked { cursor: default; }
+
+  /* ── EMPTY STATE ── */
+  .empty { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+  .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .empty p { font-size: 0.875rem; }
+
+  /* ── SECTION HEADER ── */
+  .view-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem;
+  }
+  .view-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem; letter-spacing: -0.02em;
+  }
+  .view-sub { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .main { margin-left: 0; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .view.active { animation: fadeUp 0.3s ease; }
+
+  .count-up { transition: all 0.8s; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <a href="nuffseats-app.html" class="sidebar-logo">NUFF<span>SEATS</span></a>
+
+  <div class="sidebar-nav">
+    <div class="sidebar-section-label">Overview</div>
+    <div class="nav-item active" onclick="showView('overview', this)">
+      <span class="nav-icon">📊</span> Dashboard
+    </div>
+
+    <div class="sidebar-section-label">Events</div>
+    <div class="nav-item" onclick="showView('events', this)">
+      <span class="nav-icon">🎟</span> My Events
+    </div>
+    <div class="nav-item" onclick="window.location.href='nuffseats-create-event.html'">
+      <span class="nav-icon">➕</span> Create Event
+    </div>
+
+    <div class="sidebar-section-label">Sales</div>
+    <div class="nav-item" onclick="showView('attendees', this)">
+      <span class="nav-icon">👥</span> Attendees
+      <span class="nav-badge">12</span>
+    </div>
+    <div class="nav-item" onclick="showView('payouts', this)">
+      <span class="nav-icon">💳</span> Payouts
+    </div>
+
+    <div class="sidebar-section-label">Account</div>
+    <div class="nav-item" onclick="showView('settings', this)">
+      <span class="nav-icon">⚙️</span> Settings
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">🔗</span> Public profile
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="org-info">
+      <div class="org-avatar">SC</div>
+      <div>
+        <div class="org-name">Spaceship Collective</div>
+        <div class="org-plan">Organizer · Free plan</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <div class="topbar-right">
+      <span style="font-size:0.78rem;color:var(--muted);">Thu 9 Apr, 2026</span>
+      <a href="nuffseats-create-event.html" class="btn btn-dark">+ New event</a>
+    </div>
+  </div>
+
+  <!-- ── VIEW: OVERVIEW ── -->
+  <div class="view active" id="view-overview">
+
+    <div class="view-header">
+      <div>
+        <div class="view-title">Good evening, Spaceship 👋</div>
+        <div class="view-sub">Here's how your events are doing</div>
+      </div>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total revenue</div>
+        <div class="stat-value" id="stat-revenue">—</div>
+        <div class="stat-delta up">↑ Since last event</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tickets sold</div>
+        <div class="stat-value" id="stat-tickets">—</div>
+        <div class="stat-delta up">↑ Across all events</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Live events</div>
+        <div class="stat-value" id="stat-live">—</div>
+        <div class="stat-delta neutral">Currently on sale</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg ticket price</div>
+        <div class="stat-value" id="stat-avg">—</div>
+        <div class="stat-delta neutral">Per ticket sold</div>
+      </div>
+    </div>
+
+    <!-- SALES CHART -->
+    <div class="chart-card">
+      <div class="chart-head">
+        <div>
+          <div class="chart-title">Ticket sales over time</div>
+          <div class="chart-meta" id="chartMeta">Loading…</div>
+        </div>
+        <div class="chart-tabs">
+          <div class="chart-tab active" onclick="setChartPeriod('7d', this)">7D</div>
+          <div class="chart-tab" onclick="setChartPeriod('30d', this)">30D</div>
+          <div class="chart-tab" onclick="setChartPeriod('all', this)">All</div>
+        </div>
+      </div>
+      <div class="bar-chart" id="barChart"></div>
+    </div>
+
+    <!-- TWO-COL -->
+    <div class="two-col">
+
+      <!-- RECENT SALES -->
+      <div class="list-card">
+        <div class="list-card-head">
+          <div class="list-card-title">Recent purchases</div>
+          <button class="btn btn-ghost" onclick="showView('attendees', document.querySelector('[onclick*=attendees]'))">View all</button>
+        </div>
+        <div id="recentSalesList"></div>
+      </div>
+
+      <!-- TOP EVENTS -->
+      <div class="list-card">
+        <div class="list-card-head">
+          <div class="list-card-title">Event performance</div>
+          <button class="btn btn-ghost" onclick="showView('events', document.querySelector('[onclick*=events]'))">View all</button>
+        </div>
+        <div id="eventPerfList"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ── VIEW: MY EVENTS ── -->
+  <div class="view" id="view-events">
+    <div class="view-header">
+      <div>
+        <div class="view-title">My Events</div>
+        <div class="view-sub">Manage, edit and monitor your events</div>
+      </div>
+      <a href="nuffseats-create-event.html" class="btn btn-dark">+ Create event</a>
+    </div>
+
+    <div class="list-card">
+      <table class="events-table" id="eventsTable">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Date</th>
+            <th>Tickets sold</th>
+            <th>Revenue</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="eventsTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── VIEW: ATTENDEES ── -->
+  <div class="view" id="view-attendees">
+    <div class="view-header">
+      <div>
+        <div class="view-title">Attendees</div>
+        <div class="view-sub">All ticket purchasers across your events</div>
+      </div>
+      <button class="btn btn-outline" onclick="exportCSV()">↓ Export CSV</button>
+    </div>
+
+    <div class="search-bar-sm">
+      <input type="text" class="search-input-sm" placeholder="Search by name, email or order ref…" oninput="filterAttendees(this.value)">
+      <select class="search-input-sm" style="flex:0;width:auto;min-width:160px;" onchange="filterByEvent(this.value)" id="eventFilter">
+        <option value="">All events</option>
+      </select>
+    </div>
+
+    <div class="list-card">
+      <table class="attendees-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Event</th>
+            <th>Ticket type</th>
+            <th>Paid</th>
+            <th>Order ref</th>
+            <th>Check-in</th>
+          </tr>
+        </thead>
+        <tbody id="attendeesBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── VIEW: PAYOUTS ── -->
+  <div class="view" id="view-payouts">
+    <div class="view-header">
+      <div>
+        <div class="view-title">Payouts</div>
+        <div class="view-sub">Your earnings and bank transfers</div>
+      </div>
+    </div>
+
+    <div class="payout-banner">
+      <div>
+        <div class="payout-label">Available balance</div>
+        <div class="payout-amount">—</div>
+        <div class="payout-sub">Ready to withdraw to your bank account</div>
+      </div>
+      <button class="btn btn-accent" onclick="requestPayout()">Request payout →</button>
+    </div>
+
+    <div class="two-col">
+      <div class="list-card">
+        <div class="list-card-head"><div class="list-card-title">Payout history</div></div>
+        <div id="payoutHistory">
+          <div class="empty"><div class="empty-icon">💳</div><p>No payouts yet.<br>Request your first payout above.</p></div>
+        </div>
+      </div>
+      <div class="list-card">
+        <div class="list-card-head"><div class="list-card-title">Bank account</div></div>
+        <div style="padding:1.25rem;">
+          <div style="margin-bottom:1.25rem;">
+            <div style="font-size:0.72rem;color:var(--muted);margin-bottom:0.3rem;">Registered bank</div>
+            <div style="font-size:0.9rem;font-weight:500;">Guaranty Trust Bank (GTB)</div>
+          </div>
+          <div style="margin-bottom:1.25rem;">
+            <div style="font-size:0.72rem;color:var(--muted);margin-bottom:0.3rem;">Account number</div>
+            <div style="font-size:0.9rem;font-weight:500;">•••• •••• 6789</div>
+          </div>
+          <div>
+            <div style="font-size:0.72rem;color:var(--muted);margin-bottom:0.3rem;">Account name</div>
+            <div style="font-size:0.9rem;font-weight:500;">Spaceship Collective</div>
+          </div>
+          <button class="btn btn-outline" style="margin-top:1.25rem;width:100%;justify-content:center;">Update bank details</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── VIEW: SETTINGS ── -->
+  <div class="view" id="view-settings">
+    <div class="view-header">
+      <div>
+        <div class="view-title">Settings</div>
+        <div class="view-sub">Manage your organizer profile and preferences</div>
+      </div>
+    </div>
+
+    <div class="list-card" style="max-width:580px;margin-bottom:1.5rem;">
+      <div class="list-card-head"><div class="list-card-title">Organizer profile</div></div>
+      <div style="padding:1.4rem;display:flex;flex-direction:column;gap:1rem;">
+        <div>
+          <label style="font-size:0.78rem;font-weight:500;display:block;margin-bottom:0.4rem;">Organizer name</label>
+          <input type="text" value="Spaceship Collective" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:0.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;outline:none;">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;font-weight:500;display:block;margin-bottom:0.4rem;">Email address</label>
+          <input type="email" value="hello@spaceshipcollective.ng" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:0.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;outline:none;">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;font-weight:500;display:block;margin-bottom:0.4rem;">Phone number</label>
+          <input type="tel" value="0801 234 5678" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:0.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;outline:none;">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;font-weight:500;display:block;margin-bottom:0.4rem;">Bio <span style="font-weight:300;color:var(--muted);">Optional</span></label>
+          <textarea rows="3" style="width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:0.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;outline:none;resize:vertical;" placeholder="Tell attendees about your organisation…"></textarea>
+        </div>
+        <button class="btn btn-dark" style="align-self:flex-start;" onclick="saveSettings(this)">Save changes</button>
+      </div>
+    </div>
+
+    <div class="list-card" style="max-width:580px;">
+      <div class="list-card-head"><div class="list-card-title">Notifications</div></div>
+      <div style="padding:1.25rem;display:flex;flex-direction:column;gap:1rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:0.85rem;font-weight:500;">Email on every ticket sale</div>
+            <div style="font-size:0.72rem;color:var(--muted);">Receive an email each time someone buys a ticket</div>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:0.85rem;font-weight:500;">Daily sales summary</div>
+            <div style="font-size:0.72rem;color:var(--muted);">A morning email with yesterday's totals</div>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:0.85rem;font-weight:500;">Payout notifications</div>
+            <div style="font-size:0.72rem;color:var(--muted);">Alert when a payout hits your account</div>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- /main -->
+
+<script>
+  // ── SAMPLE DATA ──
+  const EVENTS_DATA = [
+    { id:1, name:"Burna Boy — Live in Lagos",   date:"19 Apr 2025", city:"Lagos",         cat:"music",    sold:284, cap:500,  revenue:7100000, status:"live"  },
+    { id:2, name:"Night of 1000 Laughs",         date:"25 Apr 2025", city:"Lagos",         cat:"comedy",   sold:142, cap:300,  revenue:1704000, status:"live"  },
+    { id:3, name:"Lagos TechFest 2025",           date:"3 May 2025",  city:"Lagos",         cat:"tech",     sold:67,  cap:200,  revenue:335000,  status:"live"  },
+    { id:4, name:"The Detty December Kickoff",   date:"6 Dec 2025",  city:"Abuja",         cat:"party",    sold:0,   cap:400,  revenue:0,       status:"draft" },
+  ];
+
+  const ATTENDEES_DATA = [
+    { name:"Adaeze Johnson",    email:"adaeze@gmail.com",      event:"Burna Boy — Live in Lagos", type:"VIP",              paid:50000, ref:"NS-A3F2K9", checked:false },
+    { name:"Emeka Okonkwo",     email:"emeka@outlook.com",     event:"Night of 1000 Laughs",      type:"General Admission",paid:12000, ref:"NS-B7K1M2", checked:true  },
+    { name:"Fatima Abdullahi",  email:"fatima@yahoo.com",      event:"Burna Boy — Live in Lagos", type:"General Admission",paid:25000, ref:"NS-C9X4P3", checked:false },
+    { name:"Chidi Nwosu",       email:"chidi@gmail.com",       event:"Lagos TechFest 2025",       type:"General Admission",paid:5000,  ref:"NS-D2L8Q5", checked:false },
+    { name:"Ngozi Eze",         email:"ngozi@hotmail.com",     event:"Burna Boy — Live in Lagos", type:"Table (10 pax)",   paid:120000,ref:"NS-E5R3T7", checked:false },
+    { name:"Taiwo Adeleke",     email:"taiwo@gmail.com",       event:"Night of 1000 Laughs",      type:"VIP",              paid:18000, ref:"NS-F1W6U9", checked:true  },
+    { name:"Bolu Adesanya",     email:"bolu@outlook.com",      event:"Lagos TechFest 2025",       type:"General Admission",paid:5000,  ref:"NS-G4Z0V2", checked:false },
+    { name:"Kemi Oladele",      email:"kemi@gmail.com",        event:"Burna Boy — Live in Lagos", type:"VIP",              paid:50000, ref:"NS-H8Y2W4", checked:false },
+    { name:"Tunde Bakare",      email:"tunde@yahoo.com",       event:"Night of 1000 Laughs",      type:"General Admission",paid:12000, ref:"NS-I3N7X6", checked:false },
+    { name:"Amaka Obi",         email:"amaka@gmail.com",       event:"Burna Boy — Live in Lagos", type:"General Admission",paid:25000, ref:"NS-J6M1Y8", checked:true  },
+    { name:"Seun Coker",        email:"seun@outlook.com",      event:"Lagos TechFest 2025",       type:"General Admission",paid:5000,  ref:"NS-K0P4Z1", checked:false },
+    { name:"Dami Fashola",      email:"dami@gmail.com",        event:"Night of 1000 Laughs",      type:"General Admission",paid:12000, ref:"NS-L5Q8A3", checked:false },
+  ];
+
+  const CHART_DATA = {
+    "7d":  { labels:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], values:[12,8,22,16,34,45,28], highlight:5 },
+    "30d": { labels:["W1","W2","W3","W4"], values:[45,88,124,74], highlight:2 },
+    "all": { labels:["Jan","Feb","Mar","Apr"], values:[0,0,165,328], highlight:3 },
+  };
+
+  let activePeriod = "7d";
+  let filteredAttendees = [...ATTENDEES_DATA];
+
+  function fmt(n) { return "₦" + n.toLocaleString(); }
+
+  // ── INIT ──
+  function init() {
+    // Stats — leave blank as instructed, just show calculated totals from data
+    const totalRev     = EVENTS_DATA.reduce((s,e) => s + e.revenue, 0);
+    const totalTickets = EVENTS_DATA.reduce((s,e) => s + e.sold, 0);
+    const liveEvents   = EVENTS_DATA.filter(e => e.status === "live").length;
+    const avgPrice     = totalTickets > 0 ? Math.round(totalRev / totalTickets) : 0;
+
+    animateValue("stat-revenue", 0, totalRev,  1200, v => fmt(v));
+    animateValue("stat-tickets", 0, totalTickets, 900, v => v.toLocaleString());
+    animateValue("stat-live",    0, liveEvents, 600, v => v);
+    animateValue("stat-avg",     0, avgPrice,   1000, v => fmt(v));
+
+    renderChart("7d");
+    renderRecentSales();
+    renderEventPerf();
+    renderEventsTable();
+    renderAttendees();
+    populateEventFilter();
+
+    // Payout balance = 90% of total revenue (after NUFFSEATS fee)
+    document.querySelector(".payout-amount").textContent = fmt(Math.round(totalRev * 0.90));
+  }
+
+  // ── COUNTER ANIMATION ──
+  function animateValue(id, from, to, duration, formatter) {
+    const el = document.getElementById(id);
+    const start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = formatter(Math.round(from + (to - from) * ease));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // ── CHART ──
+  function renderChart(period) {
+    activePeriod = period;
+    const data = CHART_DATA[period];
+    const max  = Math.max(...data.values);
+    const total = data.values.reduce((a,b) => a+b, 0);
+
+    document.getElementById("chartMeta").textContent = `${total.toLocaleString()} tickets sold in this period`;
+
+    const chart = document.getElementById("barChart");
+    chart.innerHTML = data.labels.map((label, i) => {
+      const pct = max > 0 ? (data.values[i] / max) * 100 : 0;
+      const isHighlight = i === data.highlight;
+      return `<div class="bar-col">
+        <div class="bar ${isHighlight ? 'highlight' : ''}" style="height:${pct}%;background:${isHighlight ? 'var(--black)' : 'var(--surface)'}" title="${data.values[i]} tickets"></div>
+        <div class="bar-label">${label}</div>
+      </div>`;
+    }).join("");
+
+    // Re-animate bars
+    setTimeout(() => {
+      chart.querySelectorAll(".bar").forEach((bar, i) => {
+        const pct = max > 0 ? (data.values[i] / max) * 100 : 0;
+        bar.style.height = pct + "%";
+      });
+    }, 50);
+  }
+
+  function setChartPeriod(period, el) {
+    document.querySelectorAll(".chart-tab").forEach(t => t.classList.remove("active"));
+    el.classList.add("active");
+    renderChart(period);
+  }
+
+  // ── RECENT SALES ──
+  const COLORS = ["#e8452a","#1a7a4a","#0e5fa3","#b45309","#6d28d9","#0f766e","#9d174d"];
+
+  function renderRecentSales() {
+    const list = document.getElementById("recentSalesList");
+    list.innerHTML = ATTENDEES_DATA.slice(0,6).map((a,i) => `
+      <div class="list-row">
+        <div class="row-avatar" style="background:${COLORS[i%COLORS.length]}">${a.name.charAt(0)}</div>
+        <div>
+          <div class="row-name">${a.name}</div>
+          <div class="row-sub">${a.type} · ${a.event.length > 28 ? a.event.slice(0,28)+"…" : a.event}</div>
+        </div>
+        <div class="row-right">
+          <div class="row-amount">${fmt(a.paid)}</div>
+          <div class="row-time">${a.ref}</div>
+        </div>
+      </div>`).join("");
+  }
+
+  function renderEventPerf() {
+    const list = document.getElementById("eventPerfList");
+    list.innerHTML = EVENTS_DATA.map(e => {
+      const pct = e.cap > 0 ? Math.round((e.sold/e.cap)*100) : 0;
+      return `
+        <div class="list-row">
+          <div>
+            <div class="row-name">${e.name.length > 28 ? e.name.slice(0,28)+"…" : e.name}</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+          </div>
+          <div class="row-right">
+            <div class="row-amount" style="font-size:0.82rem;">${e.sold}/${e.cap}</div>
+            <div class="row-time">${pct}% sold</div>
+          </div>
+        </div>`;
+    }).join("");
+  }
+
+  // ── EVENTS TABLE ──
+  function renderEventsTable() {
+    const body = document.getElementById("eventsTableBody");
+    const STATUS_BADGE = { live:"badge-live", draft:"badge-draft", past:"badge-past" };
+    const STATUS_LABEL = { live:"🟢 Live", draft:"Draft", past:"Ended" };
+
+    body.innerHTML = EVENTS_DATA.map(e => {
+      const pct = e.cap > 0 ? Math.round((e.sold/e.cap)*100) : 0;
+      return `<tr>
+        <td>
+          <div class="event-name-cell">${e.name}</div>
+          <div class="event-sub">${e.city}</div>
+        </td>
+        <td style="white-space:nowrap;">${e.date}</td>
+        <td>
+          <div>${e.sold} / ${e.cap}</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        </td>
+        <td style="font-weight:500;">${e.revenue > 0 ? fmt(e.revenue) : "—"}</td>
+        <td><span class="badge ${STATUS_BADGE[e.status]}">${STATUS_LABEL[e.status]}</span></td>
+        <td>
+          <div class="action-btns">
+            <a href="nuffseats-event-detail.html" class="action-btn">View</a>
+            <button class="action-btn" onclick="editEvent(${e.id})">Edit</button>
+            <button class="action-btn" onclick="shareEvent(${e.id})">Share</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join("");
+  }
+
+  // ── ATTENDEES ──
+  function renderAttendees(data) {
+    const rows = data || ATTENDEES_DATA;
+    const body = document.getElementById("attendeesBody");
+    body.innerHTML = rows.map((a,i) => `
+      <tr>
+        <td><strong>${a.name}</strong></td>
+        <td style="color:var(--muted);">${a.email}</td>
+        <td style="font-size:0.78rem;">${a.event.length > 22 ? a.event.slice(0,22)+"…" : a.event}</td>
+        <td style="font-size:0.78rem;">${a.type}</td>
+        <td style="font-weight:500;">${fmt(a.paid)}</td>
+        <td style="font-family:monospace;font-size:0.75rem;color:var(--muted);">${a.ref}</td>
+        <td>
+          <button class="check-in-btn ${a.checked ? 'checked' : ''}" id="chk-${i}" onclick="toggleCheckin(${i},'chk-${i}')">
+            ${a.checked ? "✓ Checked in" : "Check in"}
+          </button>
+        </td>
+      </tr>`).join("");
+  }
+
+  function populateEventFilter() {
+    const sel = document.getElementById("eventFilter");
+    [...new Set(ATTENDEES_DATA.map(a => a.event))].forEach(ev => {
+      const opt = document.createElement("option");
+      opt.value = ev; opt.textContent = ev.length > 30 ? ev.slice(0,30)+"…" : ev;
+      sel.appendChild(opt);
+    });
+  }
+
+  function filterAttendees(q) {
+    const eventVal = document.getElementById("eventFilter").value;
+    const filtered = ATTENDEES_DATA.filter(a => {
+      const matchQ  = !q || a.name.toLowerCase().includes(q.toLowerCase()) || a.email.toLowerCase().includes(q.toLowerCase()) || a.ref.toLowerCase().includes(q.toLowerCase());
+      const matchEv = !eventVal || a.event === eventVal;
+      return matchQ && matchEv;
+    });
+    renderAttendees(filtered);
+  }
+
+  function filterByEvent(val) {
+    const q = document.querySelector(".search-input-sm").value;
+    filterAttendees(q);
+  }
+
+  function toggleCheckin(idx, btnId) {
+    ATTENDEES_DATA[idx].checked = !ATTENDEES_DATA[idx].checked;
+    const btn = document.getElementById(btnId);
+    if (ATTENDEES_DATA[idx].checked) {
+      btn.textContent = "✓ Checked in";
+      btn.classList.add("checked");
+    } else {
+      btn.textContent = "Check in";
+      btn.classList.remove("checked");
+    }
+  }
+
+  function exportCSV() {
+    const headers = ["Name","Email","Event","Ticket type","Paid","Order ref","Checked in"];
+    const rows = ATTENDEES_DATA.map(a => [a.name, a.email, a.event, a.type, a.paid, a.ref, a.checked ? "Yes" : "No"]);
+    const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href = url; a.download = "nuffseats-attendees.csv"; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ── MISC ──
+  function editEvent(id) { window.location.href = "nuffseats-create-event.html"; }
+  function shareEvent(id) {
+    navigator.clipboard.writeText("https://nuffseats.ng/e/event-" + id).then(() => alert("Event link copied!"));
+  }
+
+  function requestPayout() {
+    const amt = document.querySelector(".payout-amount").textContent;
+    if (confirm(`Request payout of ${amt} to your GTB account?`)) {
+      alert("Payout request submitted! Funds will arrive in 1–2 business days.");
+    }
+  }
+
+  function saveSettings(btn) {
+    btn.textContent = "✓ Saved";
+    setTimeout(() => btn.textContent = "Save changes", 2000);
+  }
+
+  // ── VIEW SWITCHING ──
+  function showView(name, el) {
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    document.getElementById("view-" + name).classList.add("active");
+
+    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+    if (el) el.classList.add("active");
+
+    const titles = { overview:"Dashboard", events:"My Events", attendees:"Attendees", payouts:"Payouts", settings:"Settings" };
+    document.getElementById("topbarTitle").textContent = titles[name] || name;
+  }
+
+  // Toggle styles for settings
+  const style = document.createElement("style");
+  style.textContent = `.toggle { position:relative;width:36px;height:20px;background:var(--border);border-radius:100px;cursor:pointer;transition:background .2s; } .toggle.on{background:var(--black);} .toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);} .toggle.on::after{transform:translateX(16px);}`;
+  document.head.appendChild(style);
+
+  init();
+</script>
+</body>
+</html>
