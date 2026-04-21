@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NUFFSEATS — Tickets for Every Moment</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -13,689 +13,435 @@
     --black: #0d0d0d;
     --white: #f7f5f0;
     --accent: #e8452a;
+    --accent-dark: #c03520;
     --muted: #9a9690;
     --border: #e0ddd7;
-    --card-bg: #ffffff;
+    --card: #ffffff;
+    --surface: #f0ede8;
   }
 
   html { scroll-behavior: smooth; }
-
   body {
     background: var(--white);
     color: var(--black);
     font-family: 'DM Sans', sans-serif;
     font-weight: 300;
     line-height: 1.6;
-    overflow-x: hidden;
+    min-height: 100vh;
   }
 
-  /* NAV */
+  /* ── NAV ── */
   nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.25rem 5%;
-    background: rgba(247, 245, 240, 0.92);
-    backdrop-filter: blur(12px);
+    position: sticky; top: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; height: 60px;
+    background: rgba(247,245,240,0.94);
+    backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
   }
-
-  .logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.4rem;
-    letter-spacing: -0.02em;
-    color: var(--black);
-    text-decoration: none;
-  }
-
+  .logo { font-family: 'DM Serif Display', serif; font-size: 1.25rem; letter-spacing: -0.02em; color: var(--black); text-decoration: none; flex-shrink: 0; }
   .logo span { color: var(--accent); }
 
-  nav ul {
-    list-style: none;
-    display: flex;
-    gap: 2.5rem;
+  .nav-search { flex: 1; max-width: 360px; margin: 0 2rem; position: relative; }
+  .nav-search input {
+    width: 100%; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 100px; padding: 0.45rem 1rem 0.45rem 2.5rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--black);
+    outline: none; transition: border-color 0.2s, background 0.2s;
   }
+  .nav-search input:focus { border-color: var(--black); background: var(--card); }
+  .nav-search input::placeholder { color: var(--muted); }
+  .nav-search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; font-size: 0.85rem; }
 
-  nav ul a {
-    text-decoration: none;
-    color: var(--muted);
-    font-size: 0.875rem;
-    font-weight: 400;
-    transition: color 0.2s;
-  }
+  .nav-right { display: flex; align-items: center; gap: 1rem; }
+  .nav-link { text-decoration: none; color: var(--muted); font-size: 0.85rem; font-weight: 400; transition: color 0.2s; }
+  .nav-link:hover { color: var(--black); }
 
-  nav ul a:hover { color: var(--black); }
-
-  .nav-cta {
-    background: var(--black);
-    color: var(--white) !important;
-    padding: 0.55rem 1.25rem;
-    border-radius: 100px;
-    font-weight: 500 !important;
-    transition: background 0.2s !important;
-  }
-
-  .nav-cta:hover { background: var(--accent) !important; color: var(--white) !important; }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 10rem 5% 6rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: fadeUp 0.6s ease 0.2s forwards;
-  }
-
-  .hero-label::before {
-    content: '';
-    width: 24px; height: 1px;
-    background: var(--accent);
-  }
-
-  h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(3rem, 8vw, 7rem);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    max-width: 14ch;
-    opacity: 0;
-    animation: fadeUp 0.7s ease 0.35s forwards;
-  }
-
-  h1 em {
-    font-style: italic;
-    color: var(--accent);
-  }
-
-  .hero-sub {
-    margin-top: 2rem;
-    font-size: 1.1rem;
-    color: var(--muted);
-    max-width: 38ch;
-    opacity: 0;
-    animation: fadeUp 0.7s ease 0.5s forwards;
-  }
-
-  .hero-actions {
-    margin-top: 3rem;
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    opacity: 0;
-    animation: fadeUp 0.7s ease 0.65s forwards;
-  }
-
-  .btn-primary {
-    background: var(--black);
-    color: var(--white);
-    padding: 0.85rem 2rem;
-    border-radius: 100px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    text-decoration: none;
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.5rem 1.1rem; border-radius: 100px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500;
+    text-decoration: none; cursor: pointer; border: none;
     transition: background 0.2s, transform 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
   }
+  .btn-dark { background: var(--black); color: var(--white); }
+  .btn-dark:hover { background: #2a2a2a; }
+  .btn-accent { background: var(--accent); color: #fff; }
+  .btn-accent:hover { background: var(--accent-dark); }
+  .btn-outline { background: transparent; color: var(--black); border: 1.5px solid var(--border); }
+  .btn-outline:hover { border-color: var(--black); }
 
-  .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
-
-  .btn-secondary {
-    color: var(--black);
-    padding: 0.85rem 2rem;
-    border-radius: 100px;
-    font-size: 0.95rem;
-    font-weight: 400;
-    text-decoration: none;
-    border: 1.5px solid var(--border);
-    transition: border-color 0.2s, transform 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
+  /* ── HERO ── */
+  .hero {
+    padding: 4rem 5% 3rem; text-align: center;
+    position: relative; overflow: hidden;
   }
-
-  .btn-secondary:hover { border-color: var(--black); transform: translateY(-1px); }
-
-  /* Hero deco */
-  .hero-deco {
-    position: absolute;
-    right: 5%;
-    top: 50%;
-    transform: translateY(-50%);
-    width: clamp(280px, 38vw, 520px);
-    aspect-ratio: 3/4;
-    border-radius: 2px;
-    overflow: hidden;
-    opacity: 0;
-    animation: fadeIn 1s ease 0.8s forwards;
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(232,69,42,0.06) 0%, transparent 70%);
+    pointer-events: none;
   }
-
-  .hero-deco-inner {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    position: relative;
-    overflow: hidden;
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.25rem;
+    opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards;
   }
-
-  .hero-deco-inner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 39px,
-      rgba(255,255,255,0.03) 39px,
-      rgba(255,255,255,0.03) 40px
-    );
-  }
-
-  .ticket-mock {
-    background: var(--white);
-    border-radius: 8px;
-    padding: 1.25rem 1.5rem;
-    width: 80%;
-    position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-  }
-
-  .ticket-mock::after {
-    content: '';
-    position: absolute;
-    left: -8px; top: 50%;
-    transform: translateY(-50%);
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    background: #1a1a1a;
-  }
-
-  .ticket-mock::before {
-    content: '';
-    position: absolute;
-    right: -8px; top: 50%;
-    transform: translateY(-50%);
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    background: #1a1a1a;
-  }
-
-  .ticket-event { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.25rem; }
-  .ticket-name { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--black); }
-  .ticket-divider { border: none; border-top: 1.5px dashed var(--border); margin: 0.75rem 0; }
-  .ticket-meta { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--muted); }
-  .ticket-meta strong { display: block; color: var(--black); font-size: 0.8rem; }
-  .ticket-barcode {
-    display: flex;
-    gap: 2px;
-    margin-top: 0.75rem;
-    justify-content: center;
-  }
-  .bar { width: 2px; background: var(--black); border-radius: 1px; }
-
-  /* STATS */
-  .stats {
-    padding: 4rem 5%;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 2rem;
-    opacity: 0;
-    animation: fadeUp 0.7s ease 1s forwards;
-  }
-
-  .stat { }
-  .stat-num {
+  .hero h1 {
     font-family: 'DM Serif Display', serif;
-    font-size: 2.5rem;
-    line-height: 1;
-    letter-spacing: -0.03em;
+    font-size: clamp(2.2rem, 5.5vw, 4rem); line-height: 1.08; letter-spacing: -0.03em;
+    margin-bottom: 1rem; opacity: 0; animation: fadeUp 0.65s ease 0.25s forwards;
   }
-  .stat-num span { color: var(--accent); }
-  .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.35rem; text-transform: uppercase; letter-spacing: 0.08em; }
-
-  /* SECTION */
-  section { padding: 7rem 5%; }
-
-  .section-label {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    font-size: 1rem; color: var(--muted); max-width: 44ch; margin: 0 auto 2.5rem;
+    opacity: 0; animation: fadeUp 0.65s ease 0.4s forwards;
   }
 
-  .section-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
-
-  h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    max-width: 20ch;
+  /* ── SEARCH BAR ── */
+  .search-bar {
+    display: flex; align-items: center;
+    background: var(--card); border: 1.5px solid var(--border);
+    border-radius: 100px; max-width: 680px; margin: 0 auto 3rem;
+    overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    opacity: 0; animation: fadeUp 0.65s ease 0.5s forwards;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
-
-  /* HOW IT WORKS */
-  .how-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 0;
-    margin-top: 4rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
+  .search-bar:focus-within { border-color: var(--black); box-shadow: 0 4px 28px rgba(0,0,0,0.1); }
+  .search-field {
+    flex: 1; display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.85rem 1.25rem; border-right: 1px solid var(--border);
   }
+  .search-field:last-of-type { border-right: none; }
+  .search-field svg { color: var(--muted); flex-shrink: 0; }
+  .search-field input, .search-field select {
+    flex: 1; background: none; border: none; outline: none;
+    font-family: 'DM Sans', sans-serif; font-size: 0.875rem; color: var(--black); appearance: none;
+  }
+  .search-field input::placeholder { color: var(--muted); }
+  .search-field select { color: var(--muted); cursor: pointer; }
+  .search-field select option { color: var(--black); }
+  .search-bar .btn-accent { margin: 6px; padding: 0.65rem 1.4rem; flex-shrink: 0; }
 
-  .how-item {
-    padding: 2.5rem;
-    border-right: 1px solid var(--border);
+  /* ── CATEGORY CHIPS ── */
+  .categories {
+    display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 3.5rem; opacity: 0; animation: fadeUp 0.65s ease 0.6s forwards;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.4rem 1rem; border-radius: 100px; font-size: 0.8rem; font-weight: 400;
+    cursor: pointer; border: 1.5px solid var(--border); background: var(--card);
+    color: var(--black); transition: all 0.15s; user-select: none;
+  }
+  .chip:hover { border-color: var(--black); }
+  .chip.active { background: var(--black); color: var(--white); border-color: var(--black); }
+  .chip .chip-icon { font-size: 0.9rem; }
+
+  /* ── SECTION ── */
+  .section { padding: 0 5% 4rem; }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.5rem; }
+  .section-title { font-family: 'DM Serif Display', serif; font-size: 1.5rem; letter-spacing: -0.02em; }
+  .see-all { font-size: 0.8rem; color: var(--muted); text-decoration: none; font-weight: 400; transition: color 0.2s; display: flex; align-items: center; gap: 0.25rem; }
+  .see-all:hover { color: var(--accent); }
+
+  /* ── EVENT CARDS ── */
+  .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(268px, 1fr)); gap: 1.25rem; }
+  .event-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; position: relative;
+  }
+  .event-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.1); border-color: transparent; }
+  .event-thumb { height: 168px; position: relative; overflow: hidden; }
+  .event-thumb-bg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; transition: transform 0.3s; }
+  .event-card:hover .event-thumb-bg { transform: scale(1.04); }
+  .event-badge { position: absolute; top: 0.75rem; left: 0.75rem; padding: 0.2rem 0.65rem; border-radius: 100px; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+  .badge-music    { background: rgba(0,0,0,0.7); color: #f9c74f; }
+  .badge-comedy   { background: rgba(0,0,0,0.7); color: #a8e6cf; }
+  .badge-tech     { background: rgba(0,0,0,0.7); color: #8ecdf7; }
+  .badge-party    { background: rgba(0,0,0,0.7); color: #f4a4c0; }
+  .badge-food     { background: rgba(0,0,0,0.7); color: #ffd6a5; }
+  .badge-sports   { background: rgba(0,0,0,0.7); color: #b9fbc0; }
+  .badge-arts     { background: rgba(0,0,0,0.7); color: #e4b1f0; }
+  .badge-business { background: rgba(0,0,0,0.7); color: #c3cfe2; }
+  .event-save { position: absolute; top: 0.75rem; right: 0.75rem; width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.92); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; cursor: pointer; transition: background 0.15s, transform 0.15s; border: none; }
+  .event-save:hover { background: #fff; transform: scale(1.1); }
+  .event-save.saved { color: var(--accent); }
+  .event-body { padding: 1rem 1.1rem 0.85rem; }
+  .event-name { font-weight: 500; font-size: 0.95rem; margin-bottom: 0.4rem; line-height: 1.4; color: var(--black); }
+  .event-meta { display: flex; flex-direction: column; gap: 0.18rem; font-size: 0.78rem; color: var(--muted); }
+  .event-meta-row { display: flex; align-items: center; gap: 0.4rem; }
+  .event-footer { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.1rem; border-top: 1px solid var(--border); background: var(--surface); }
+  .event-price { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--black); line-height: 1; }
+  .event-price small { font-family: 'DM Sans', sans-serif; font-size: 0.68rem; color: var(--muted); font-weight: 300; display: block; margin-top: 1px; }
+  .event-price.free { color: var(--accent); }
+  .btn-get { background: var(--black); color: var(--white); padding: 0.4rem 1rem; border-radius: 100px; font-size: 0.75rem; font-weight: 500; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s; }
+  .btn-get:hover { background: var(--accent); }
+
+  /* ── CITY STRIP ── */
+  .city-strip { display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; margin-bottom: 3.5rem; }
+  .city-strip::-webkit-scrollbar { display: none; }
+  .city-card { flex-shrink: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; cursor: pointer; transition: all 0.15s; text-align: center; min-width: 100px; }
+  .city-card:hover { border-color: var(--black); transform: translateY(-2px); }
+  .city-card.active { background: var(--black); border-color: var(--black); }
+  .city-card.active .city-name { color: var(--white); }
+  .city-card.active .city-count { color: rgba(255,255,255,0.5); }
+  .city-emoji { font-size: 1.5rem; margin-bottom: 0.3rem; }
+  .city-name { font-size: 0.82rem; font-weight: 500; color: var(--black); }
+  .city-count { font-size: 0.7rem; color: var(--muted); }
+
+  /* ── EMPTY STATE ── */
+  .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); display: none; }
+  .empty-state.visible { display: block; }
+  .empty-state-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .empty-state p { font-size: 0.9rem; }
+
+  /* ── LOAD MORE ── */
+  .load-more-wrap { text-align: center; padding: 2rem 0; }
+
+  /* ── FADE IN ── */
+  .fade-in { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  /* ════════════════════════════════════
+     LANDING SECTIONS (below the app)
+  ════════════════════════════════════ */
+
+  /* ── DIVIDER BAND ── */
+  .landing-divider {
+    background: var(--black); color: var(--white);
+    padding: 2.5rem 5%; margin-top: 2rem;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  }
+  .landing-divider-text { font-family: 'DM Serif Display', serif; font-size: 1.4rem; letter-spacing: -0.02em; }
+  .landing-divider-text em { font-style: italic; color: var(--accent); }
+  .landing-divider a {
+    background: var(--white); color: var(--black);
+    padding: 0.65rem 1.5rem; border-radius: 100px;
+    font-size: 0.85rem; font-weight: 500; text-decoration: none;
     transition: background 0.2s;
   }
+  .landing-divider a:hover { background: var(--accent); color: #fff; }
 
+  /* ── STATS ── */
+  .stats-strip {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .stat-cell { padding: 2rem 5%; border-right: 1px solid var(--border); }
+  .stat-cell:last-child { border-right: none; }
+  .stat-num { font-family: 'DM Serif Display', serif; font-size: 2.5rem; line-height: 1; letter-spacing: -0.03em; }
+  .stat-num span { color: var(--accent); }
+  .stat-lbl { font-size: 0.75rem; color: var(--muted); margin-top: 0.35rem; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ── HOW IT WORKS ── */
+  .how-section { padding: 5rem 5%; }
+  .section-label-tag {
+    font-size: 0.7rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .section-label-tag::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+  .how-heading { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; letter-spacing: -0.03em; max-width: 20ch; margin-bottom: 3rem; }
+  .how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .how-item { padding: 2.5rem; border-right: 1px solid var(--border); transition: background 0.2s; }
   .how-item:last-child { border-right: none; }
   .how-item:hover { background: #fff; }
-
-  .how-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 3rem;
-    line-height: 1;
-    color: var(--border);
-    margin-bottom: 1rem;
-  }
-
+  .how-num { font-family: 'DM Serif Display', serif; font-size: 3rem; line-height: 1; color: var(--border); margin-bottom: 1rem; }
   .how-title { font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem; }
   .how-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.7; }
 
-  /* EVENTS BROWSE */
-  .events-section { background: var(--black); color: var(--white); }
-  .events-section .section-label { color: #e8452a; }
-  .events-section h2 { color: var(--white); }
-
-  .events-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.5rem;
-    margin-top: 3.5rem;
-  }
-
-  .event-card {
-    background: #1a1a1a;
-    border-radius: 4px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-
-  .event-card:hover { transform: translateY(-4px); }
-
-  .event-img {
-    height: 160px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .event-img-bg {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-  }
-
-  .event-cat {
-    position: absolute;
-    top: 0.75rem;
-    left: 0.75rem;
-    background: var(--accent);
-    color: #fff;
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.2rem 0.6rem;
-    border-radius: 100px;
-  }
-
-  .event-body { padding: 1.25rem; }
-  .event-title { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--white); }
-  .event-meta { font-size: 0.78rem; color: var(--muted); display: flex; flex-direction: column; gap: 0.2rem; }
-  .event-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.9rem 1.25rem;
-    border-top: 1px solid #2a2a2a;
-  }
-  .event-price { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--white); }
-  .event-price small { font-family: 'DM Sans', sans-serif; font-size: 0.7rem; color: var(--muted); display: block; font-weight: 300; }
-  .event-btn {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 0.45rem 1rem;
-    border-radius: 100px;
-    font-size: 0.75rem;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-  .event-btn:hover { opacity: 0.85; }
-
-  /* FOR ORGANIZERS */
-  .org-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5rem;
-    align-items: center;
-    margin-top: 4rem;
-  }
-
+  /* ── FOR ORGANIZERS ── */
+  .org-section { padding: 5rem 5%; background: var(--black); color: var(--white); }
+  .org-section .section-label-tag { color: var(--accent); }
+  .org-section .how-heading { color: var(--white); }
+  .org-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 3rem; }
   .org-features { display: flex; flex-direction: column; gap: 2rem; }
-
-  .org-feature {
-    display: flex;
-    gap: 1.25rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border);
-  }
-
+  .org-feature { display: flex; gap: 1.25rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
   .org-feature:last-child { border-bottom: none; padding-bottom: 0; }
+  .org-icon { width: 40px; height: 40px; border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--white); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .org-feature-title { font-weight: 500; margin-bottom: 0.25rem; font-size: 0.9rem; }
+  .org-feature-desc { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
+  .org-cta { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 2rem; background: var(--accent); color: #fff; padding: 0.85rem 1.75rem; border-radius: 100px; font-size: 0.9rem; font-weight: 500; text-decoration: none; transition: background 0.2s; }
+  .org-cta:hover { background: var(--accent-dark); }
 
-  .org-icon {
-    width: 40px; height: 40px;
-    border-radius: 4px;
-    background: var(--black);
-    color: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    flex-shrink: 0;
-  }
-
-  .org-feature-title { font-weight: 500; margin-bottom: 0.25rem; }
-  .org-feature-desc { font-size: 0.875rem; color: var(--muted); }
-
-  .org-visual {
-    background: var(--black);
-    border-radius: 4px;
-    padding: 2.5rem;
-    color: var(--white);
-  }
-
+  /* Org visual dashboard */
+  .org-visual { background: #1a1a1a; border-radius: 4px; padding: 2rem; color: var(--white); }
   .dash-header { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1.5rem; }
   .dash-stat-row { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
-  .dash-stat-box {
-    flex: 1;
-    background: #1a1a1a;
-    border-radius: 4px;
-    padding: 1rem;
-  }
+  .dash-stat-box { flex: 1; background: #111; border-radius: 4px; padding: 1rem; }
   .dash-stat-box .label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
   .dash-stat-box .val { font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-top: 0.25rem; }
   .dash-bar-row { display: flex; gap: 0.5rem; align-items: flex-end; height: 60px; margin-bottom: 1.5rem; }
-  .dash-bar {
-    flex: 1;
-    background: #2a2a2a;
-    border-radius: 2px;
-    position: relative;
-    transition: background 0.2s;
-  }
+  .dash-bar { flex: 1; background: #2a2a2a; border-radius: 2px; position: relative; transition: background 0.2s; }
   .dash-bar:hover { background: var(--accent); }
   .dash-bar .fill { position: absolute; bottom: 0; left: 0; right: 0; background: var(--accent); border-radius: 2px; opacity: 0.6; }
-  .dash-recent { }
   .dash-recent-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.75rem; }
   .dash-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid #2a2a2a; font-size: 0.78rem; }
   .dash-row:last-child { border-bottom: none; }
   .dash-row .name { color: #ccc; }
   .dash-row .amount { color: var(--accent); font-weight: 500; }
 
-  /* CTA */
-  .cta-section {
-    text-align: center;
-    padding: 8rem 5%;
-    background: var(--black);
-    color: var(--white);
-    position: relative;
-    overflow: hidden;
+  /* ── WAITLIST CTA ── */
+  .waitlist-section {
+    text-align: center; padding: 7rem 5%;
+    background: var(--black); color: var(--white); position: relative; overflow: hidden;
   }
-
-  .cta-section::before {
+  .waitlist-section::before {
     content: 'NUFFSEATS';
-    position: absolute;
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(5rem, 18vw, 16rem);
-    letter-spacing: -0.05em;
-    color: rgba(255,255,255,0.03);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    white-space: nowrap;
-    pointer-events: none;
+    position: absolute; font-family: 'DM Serif Display', serif;
+    font-size: clamp(5rem, 18vw, 16rem); letter-spacing: -0.05em;
+    color: rgba(255,255,255,0.03); top: 50%; left: 50%;
+    transform: translate(-50%, -50%); white-space: nowrap; pointer-events: none;
   }
+  .waitlist-heading { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: -0.02em; margin-bottom: 1rem; position: relative; }
+  .waitlist-sub { color: var(--muted); font-size: 0.95rem; max-width: 40ch; margin: 0 auto 2.5rem; position: relative; }
+  .waitlist-form { display: flex; gap: 0.75rem; max-width: 420px; margin: 0 auto; position: relative; }
+  .waitlist-input { flex: 1; background: #1a1a1a; border: 1px solid #2a2a2a; color: var(--white); padding: 0.85rem 1.25rem; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 0.875rem; outline: none; transition: border-color 0.2s; }
+  .waitlist-input::placeholder { color: #555; }
+  .waitlist-input:focus { border-color: var(--accent); }
+  .waitlist-submit { background: var(--accent); color: #fff; border: none; padding: 0.85rem 1.5rem; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
+  .waitlist-submit:hover { opacity: 0.85; }
 
-  .cta-section h2 {
-    color: var(--white);
-    max-width: 100%;
-    font-size: clamp(2rem, 5vw, 4rem);
-    margin-bottom: 1.5rem;
-    position: relative;
-  }
-
-  .cta-section p { color: var(--muted); font-size: 1rem; max-width: 40ch; margin: 0 auto 3rem; position: relative; }
-
-  .cta-form {
-    display: flex;
-    gap: 0.75rem;
-    max-width: 420px;
-    margin: 0 auto;
-    position: relative;
-  }
-
-  .cta-input {
-    flex: 1;
-    background: #1a1a1a;
-    border: 1px solid #2a2a2a;
-    color: var(--white);
-    padding: 0.85rem 1.25rem;
-    border-radius: 100px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.875rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .cta-input::placeholder { color: #555; }
-  .cta-input:focus { border-color: var(--accent); }
-
-  .cta-submit {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 0.85rem 1.5rem;
-    border-radius: 100px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: opacity 0.2s;
-  }
-
-  .cta-submit:hover { opacity: 0.85; }
-
-  /* FOOTER */
-  footer {
-    padding: 3rem 5%;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .footer-logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.2rem;
-    color: var(--black);
-  }
-
+  /* ── FOOTER ── */
+  footer { padding: 2.5rem 5%; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--black); }
   .footer-logo span { color: var(--accent); }
-
-  footer p { font-size: 0.8rem; color: var(--muted); }
-
-  footer ul {
-    list-style: none;
-    display: flex;
-    gap: 1.5rem;
-  }
-
-  footer ul a {
-    text-decoration: none;
-    color: var(--muted);
-    font-size: 0.8rem;
-    transition: color 0.2s;
-  }
-
+  footer p { font-size: 0.78rem; color: var(--muted); }
+  footer ul { list-style: none; display: flex; gap: 1.5rem; }
+  footer ul a { text-decoration: none; color: var(--muted); font-size: 0.78rem; transition: color 0.2s; }
   footer ul a:hover { color: var(--black); }
 
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
-
-  /* INTERSECTION OBSERVER TARGETS */
-  .reveal {
-    opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* RESPONSIVE */
+  /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
-    .hero-deco { display: none; }
+    .nav-search { display: none; }
+    .search-field.location-field { display: none; }
     .org-grid { grid-template-columns: 1fr; }
-    nav ul { display: none; }
     .how-item { border-right: none; border-bottom: 1px solid var(--border); }
     .how-item:last-child { border-bottom: none; }
     .how-grid { grid-template-columns: 1fr; }
+    .stats-strip { grid-template-columns: 1fr 1fr; }
+    .stat-cell { border-right: none; border-bottom: 1px solid var(--border); }
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
+<!-- ── NAV ── -->
 <nav>
-  <a href="#" class="logo">NUFF<span>SEATS</span></a>
-  <ul>
-    <li><a href="#how">How it works</a></li>
-    <li><a href="nuffseats-app.html">Browse events</a></li>
-    <li><a href="#organizers">For organizers</a></li>
-    <li><a href="nuffseats-auth.html">Sign in</a></li>
-    <li><a href="nuffseats-auth.html" class="nav-cta">Get started</a></li>
-  </ul>
+  <a href="index.html" class="logo">NUFF<span>SEATS</span></a>
+  <div class="nav-search">
+    <span class="nav-search-icon">🔍</span>
+    <input type="text" placeholder="Search events, artists, venues…" id="navSearchInput">
+  </div>
+  <div class="nav-right">
+    <a href="#how" class="nav-link">How it works</a>
+    <a href="#organizers" class="nav-link">Sell tickets</a>
+    <a href="nuffseats-auth.html" class="nav-link">Sign in</a>
+    <a href="nuffseats-auth.html" class="btn btn-dark">Get started</a>
+  </div>
 </nav>
 
-<!-- HERO -->
+<!-- ── HERO ── -->
 <section class="hero">
-  <div class="hero-label">Event ticketing platform</div>
-  <h1>Your next <em>event</em> starts here.</h1>
-  <p class="hero-sub">Buy and sell tickets for concerts, parties, conferences, and more — all in one place, built for Nigeria.</p>
-  <div class="hero-actions">
-    <a href="nuffseats-app.html" class="btn-primary">Browse events →</a>
-    <a href="nuffseats-auth.html" class="btn-secondary">Sell tickets</a>
+  <div class="hero-eyebrow">🇳🇬 Nigeria's ticketing platform</div>
+  <h1>Find your next <em>unforgettable</em> event.</h1>
+  <p class="hero-sub">Concerts, parties, comedy shows, tech conferences — tickets for everything happening around you.</p>
+
+  <div class="search-bar">
+    <div class="search-field">
+      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Event, artist or keyword" id="mainSearchInput">
+    </div>
+    <div class="search-field location-field">
+      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      <select id="cityFilter">
+        <option value="">All cities</option>
+        <option value="Lagos">Lagos</option>
+        <option value="Abuja">Abuja</option>
+        <option value="Port Harcourt">Port Harcourt</option>
+        <option value="Ibadan">Ibadan</option>
+        <option value="Kano">Kano</option>
+        <option value="Enugu">Enugu</option>
+      </select>
+    </div>
+    <button class="btn btn-accent" onclick="applySearch()">Search</button>
   </div>
 
-  <div class="hero-deco">
-    <div class="hero-deco-inner">
-      <div class="ticket-mock">
-        <div class="ticket-event">General Admission</div>
-        <div class="ticket-name">Afrobeats Live Lagos</div>
-        <hr class="ticket-divider">
-        <div class="ticket-meta">
-          <div><strong>SAT 12 APR</strong>8:00 PM</div>
-          <div><strong>Eko Hotel</strong>Victoria Island</div>
-          <div><strong>₦15,000</strong>1x Ticket</div>
-        </div>
-        <div class="ticket-barcode">
-          <div class="bar" style="height:28px"></div><div class="bar" style="height:22px"></div><div class="bar" style="height:32px"></div><div class="bar" style="height:18px"></div><div class="bar" style="height:26px"></div><div class="bar" style="height:30px"></div><div class="bar" style="height:20px"></div><div class="bar" style="height:28px"></div><div class="bar" style="height:24px"></div><div class="bar" style="height:32px"></div><div class="bar" style="height:18px"></div><div class="bar" style="height:26px"></div><div class="bar" style="height:30px"></div><div class="bar" style="height:22px"></div><div class="bar" style="height:28px"></div><div class="bar" style="height:20px"></div><div class="bar" style="height:32px"></div><div class="bar" style="height:24px"></div><div class="bar" style="height:28px"></div><div class="bar" style="height:18px"></div>
-        </div>
-      </div>
-    </div>
+  <div class="categories" id="categoryChips">
+    <div class="chip active" data-cat="all"><span class="chip-icon">✦</span> All events</div>
+    <div class="chip" data-cat="music"><span class="chip-icon">🎶</span> Music</div>
+    <div class="chip" data-cat="comedy"><span class="chip-icon">😂</span> Comedy</div>
+    <div class="chip" data-cat="tech"><span class="chip-icon">💻</span> Tech</div>
+    <div class="chip" data-cat="party"><span class="chip-icon">🎉</span> Party</div>
+    <div class="chip" data-cat="food"><span class="chip-icon">🍽</span> Food & Drink</div>
+    <div class="chip" data-cat="sports"><span class="chip-icon">⚽</span> Sports</div>
+    <div class="chip" data-cat="arts"><span class="chip-icon">🎨</span> Arts</div>
+    <div class="chip" data-cat="business"><span class="chip-icon">💼</span> Business</div>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="stat">
-    <div class="stat-num">—</div>
-    <div class="stat-label">Events listed</div>
+<!-- ── CITY STRIP ── -->
+<div class="section">
+  <div class="section-head fade-in">
+    <h2 class="section-title">Browse by city</h2>
   </div>
-  <div class="stat">
-    <div class="stat-num">—</div>
-    <div class="stat-label">Tickets sold</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">—</div>
-    <div class="stat-label">Organizers</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">—</div>
-    <div class="stat-label">States covered</div>
+  <div class="city-strip" id="cityStrip">
+    <div class="city-card active" data-city=""><div class="city-emoji">🇳🇬</div><div class="city-name">All Nigeria</div><div class="city-count" id="count-all">— events</div></div>
+    <div class="city-card" data-city="Lagos"><div class="city-emoji">🌊</div><div class="city-name">Lagos</div><div class="city-count" id="count-lagos">— events</div></div>
+    <div class="city-card" data-city="Abuja"><div class="city-emoji">🏛</div><div class="city-name">Abuja</div><div class="city-count" id="count-abuja">— events</div></div>
+    <div class="city-card" data-city="Port Harcourt"><div class="city-emoji">⚓</div><div class="city-name">Port Harcourt</div><div class="city-count" id="count-ph">— events</div></div>
+    <div class="city-card" data-city="Ibadan"><div class="city-emoji">🏙</div><div class="city-name">Ibadan</div><div class="city-count" id="count-ibadan">— events</div></div>
+    <div class="city-card" data-city="Kano"><div class="city-emoji">🌅</div><div class="city-name">Kano</div><div class="city-count" id="count-kano">— events</div></div>
+    <div class="city-card" data-city="Enugu"><div class="city-emoji">⛰</div><div class="city-name">Enugu</div><div class="city-count" id="count-enugu">— events</div></div>
   </div>
 </div>
 
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div class="reveal">
-    <div class="section-label">Simple process</div>
-    <h2>Tickets in three steps.</h2>
+<!-- ── EVENTS LISTING ── -->
+<div class="section" id="eventsSection">
+  <div class="section-head fade-in">
+    <h2 class="section-title" id="listingTitle">All events</h2>
+    <a href="#" class="see-all" id="resultCount"></a>
   </div>
+  <div class="events-grid" id="eventsGrid"></div>
+  <div class="empty-state" id="emptyState">
+    <div class="empty-state-icon">🎟</div>
+    <p>No events found for that search.<br>Try a different keyword or city.</p>
+  </div>
+  <div class="load-more-wrap" id="loadMoreWrap">
+    <button class="btn btn-outline" onclick="loadMore()">Load more events</button>
+  </div>
+</div>
 
+<!-- ════════════════════════════════════
+     LANDING SECTIONS
+════════════════════════════════════ -->
+
+<!-- ── ORGANIZER PITCH BAND ── -->
+<div class="landing-divider reveal">
+  <div class="landing-divider-text">Got an event? <em>Sell tickets in minutes.</em></div>
+  <a href="nuffseats-auth.html">Start selling →</a>
+</div>
+
+<!-- ── STATS ── -->
+<div class="stats-strip reveal">
+  <div class="stat-cell"><div class="stat-num">—</div><div class="stat-lbl">Events listed</div></div>
+  <div class="stat-cell"><div class="stat-num">—</div><div class="stat-lbl">Tickets sold</div></div>
+  <div class="stat-cell"><div class="stat-num">—</div><div class="stat-lbl">Organizers</div></div>
+  <div class="stat-cell"><div class="stat-num">—</div><div class="stat-lbl">States covered</div></div>
+</div>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="how-section" id="how">
+  <div class="reveal">
+    <div class="section-label-tag">Simple process</div>
+    <h2 class="how-heading">Tickets in four steps.</h2>
+  </div>
   <div class="how-grid reveal">
     <div class="how-item">
       <div class="how-num">01</div>
@@ -710,105 +456,22 @@
     <div class="how-item">
       <div class="how-num">03</div>
       <div class="how-title">Get your ticket</div>
-      <div class="how-desc">Receive your QR code instantly via email and SMS. Show up and scan in.</div>
+      <div class="how-desc">Receive your QR code instantly via email. Show up and scan in — no printing needed.</div>
     </div>
     <div class="how-item">
       <div class="how-num">04</div>
       <div class="how-title">Enjoy the moment</div>
-      <div class="how-desc">No printing needed. Your phone is your ticket. Experience the event, stress-free.</div>
+      <div class="how-desc">Your phone is your ticket. Walk in, scan, and experience the event stress-free.</div>
     </div>
   </div>
 </section>
 
-<!-- EVENTS -->
-<section id="events" class="events-section">
+<!-- ── FOR ORGANIZERS ── -->
+<section class="org-section" id="organizers">
   <div class="reveal">
-    <div class="section-label">What's on</div>
-    <h2>Events happening near you.</h2>
+    <div class="section-label-tag">For organizers</div>
+    <h2 class="how-heading">Sell tickets without the stress.</h2>
   </div>
-
-  <div class="events-grid reveal">
-    <div class="event-card">
-      <div class="event-img">
-        <div class="event-img-bg" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">🎶</div>
-        <div class="event-cat">Music</div>
-      </div>
-      <div class="event-body">
-        <div class="event-title">Burna Boy — Live in Lagos</div>
-        <div class="event-meta">
-          <span>📅 Sat, 19 Apr 2025</span>
-          <span>📍 Tafawa Balewa Square, Lagos</span>
-        </div>
-      </div>
-      <div class="event-footer">
-        <div class="event-price">₦25,000 <small>from</small></div>
-        <button class="event-btn">Get tickets</button>
-      </div>
-    </div>
-
-    <div class="event-card">
-      <div class="event-img">
-        <div class="event-img-bg" style="background: linear-gradient(135deg, #2d1b00, #5a3800);">😂</div>
-        <div class="event-cat">Comedy</div>
-      </div>
-      <div class="event-body">
-        <div class="event-title">Night of 1000 Laughs</div>
-        <div class="event-meta">
-          <span>📅 Fri, 25 Apr 2025</span>
-          <span>📍 Eko Hotel, V/I, Lagos</span>
-        </div>
-      </div>
-      <div class="event-footer">
-        <div class="event-price">₦12,000 <small>from</small></div>
-        <button class="event-btn">Get tickets</button>
-      </div>
-    </div>
-
-    <div class="event-card">
-      <div class="event-img">
-        <div class="event-img-bg" style="background: linear-gradient(135deg, #0a1628, #1a3a5c);">💻</div>
-        <div class="event-cat">Tech</div>
-      </div>
-      <div class="event-body">
-        <div class="event-title">Lagos TechFest 2025</div>
-        <div class="event-meta">
-          <span>📅 Sat, 3 May 2025</span>
-          <span>📍 Landmark Centre, Lagos</span>
-        </div>
-      </div>
-      <div class="event-footer">
-        <div class="event-price">₦5,000 <small>from</small></div>
-        <button class="event-btn">Get tickets</button>
-      </div>
-    </div>
-
-    <div class="event-card">
-      <div class="event-img">
-        <div class="event-img-bg" style="background: linear-gradient(135deg, #1a0a2e, #3d1a6e);">🎉</div>
-        <div class="event-cat">Party</div>
-      </div>
-      <div class="event-body">
-        <div class="event-title">The Detty December Kickoff</div>
-        <div class="event-meta">
-          <span>📅 Fri, 6 Dec 2025</span>
-          <span>📍 The Podium, Abuja</span>
-        </div>
-      </div>
-      <div class="event-footer">
-        <div class="event-price">₦8,000 <small>from</small></div>
-        <button class="event-btn">Get tickets</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOR ORGANIZERS -->
-<section id="organizers">
-  <div class="reveal">
-    <div class="section-label">For organizers</div>
-    <h2>Sell tickets without the stress.</h2>
-  </div>
-
   <div class="org-grid">
     <div class="org-features reveal">
       <div class="org-feature">
@@ -839,19 +502,13 @@
           <div class="org-feature-desc">Scan QR codes at the door with any smartphone. No dedicated hardware needed.</div>
         </div>
       </div>
+      <a href="nuffseats-auth.html" class="org-cta">Create your first event →</a>
     </div>
-
     <div class="org-visual reveal">
-      <div class="dash-header">Organizer Dashboard — Afrobeats Live</div>
+      <div class="dash-header">Organizer Dashboard</div>
       <div class="dash-stat-row">
-        <div class="dash-stat-box">
-          <div class="label">Tickets sold</div>
-          <div class="val">—</div>
-        </div>
-        <div class="dash-stat-box">
-          <div class="label">Revenue</div>
-          <div class="val">—</div>
-        </div>
+        <div class="dash-stat-box"><div class="label">Tickets sold</div><div class="val">—</div></div>
+        <div class="dash-stat-box"><div class="label">Revenue</div><div class="val">—</div></div>
       </div>
       <div class="dash-bar-row">
         <div class="dash-bar"><div class="fill" style="height:30%"></div></div>
@@ -862,68 +519,212 @@
         <div class="dash-bar"><div class="fill" style="height:90%"></div></div>
         <div class="dash-bar"><div class="fill" style="height:100%"></div></div>
       </div>
-      <div class="dash-recent">
-        <div class="dash-recent-label">Recent purchases</div>
-        <div class="dash-row"><span class="name">—</span><span class="amount">—</span></div>
-        <div class="dash-row"><span class="name">—</span><span class="amount">—</span></div>
-        <div class="dash-row"><span class="name">—</span><span class="amount">—</span></div>
-        <div class="dash-row"><span class="name">—</span><span class="amount">—</span></div>
-      </div>
+      <div class="dash-recent-label">Recent purchases</div>
+      <div class="dash-row"><span class="name">—</span><span class="amount">—</span></div>
+      <div class="dash-row"><span class="name">—</span><span class="amount">—</span></div>
+      <div class="dash-row"><span class="name">—</span><span class="amount">—</span></div>
     </div>
   </div>
 </section>
 
-<!-- CTA / WAITLIST -->
-<section class="cta-section" id="waitlist">
-  <h2>Be first when we launch.</h2>
-  <p>Drop your email and we'll let you know the moment NUFFSEATS goes live.</p>
-  <div class="cta-form">
-    <input type="email" class="cta-input" placeholder="your@email.com">
-    <button class="cta-submit">Notify me</button>
+<!-- ── WAITLIST CTA ── -->
+<section class="waitlist-section" id="waitlist">
+  <h2 class="waitlist-heading">Be first when we fully launch.</h2>
+  <p class="waitlist-sub">Drop your email and we'll keep you updated as we grow.</p>
+  <div class="waitlist-form">
+    <input type="email" class="waitlist-input" id="waitlistEmail" placeholder="your@email.com">
+    <button class="waitlist-submit" onclick="submitWaitlist()">Notify me</button>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ── FOOTER ── -->
 <footer>
   <div class="footer-logo">NUFF<span>SEATS</span></div>
-  <p>© 2025 Nuffseats. Built for Nigeria.</p>
+  <p>© 2025 Nuffseats · Built for Nigeria</p>
   <ul>
     <li><a href="#">Twitter</a></li>
     <li><a href="#">Instagram</a></li>
-    <li><a href="#">Contact</a></li>
+    <li><a href="nuffseats-auth.html">Sign in</a></li>
+    <li><a href="nuffseats-auth.html">Get started</a></li>
   </ul>
 </footer>
 
 <script>
-  // Intersection observer for reveal animations
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.12 });
+// ── EVENT DATA ──
+const EVENTS = [
+  { id:1,  name:"Burna Boy — Live in Lagos",   cat:"music",    city:"Lagos",         venue:"Tafawa Balewa Square", date:"Sat 19 Apr", time:"8:00 PM", price:25000,  emoji:"🎤", gradient:"linear-gradient(145deg,#1a1232,#3d1a6e)" },
+  { id:2,  name:"Night of 1000 Laughs",         cat:"comedy",   city:"Lagos",         venue:"Eko Hotel, V/I",       date:"Fri 25 Apr", time:"7:30 PM", price:12000,  emoji:"😂", gradient:"linear-gradient(145deg,#0d2010,#1a5c2a)" },
+  { id:3,  name:"Lagos TechFest 2025",           cat:"tech",     city:"Lagos",         venue:"Landmark Centre",      date:"Sat 3 May",  time:"9:00 AM", price:5000,   emoji:"💻", gradient:"linear-gradient(145deg,#0a1628,#1a3a5c)" },
+  { id:4,  name:"The Detty December Kickoff",   cat:"party",    city:"Abuja",         venue:"The Podium",           date:"Fri 6 Dec",  time:"9:00 PM", price:8000,   emoji:"🎉", gradient:"linear-gradient(145deg,#1a0a2e,#3d1a6e)" },
+  { id:5,  name:"Afrobeats Unplugged",           cat:"music",    city:"Abuja",         venue:"MUSON Centre",         date:"Sun 27 Apr", time:"6:00 PM", price:15000,  emoji:"🎵", gradient:"linear-gradient(145deg,#2d0a0a,#6e1a1a)" },
+  { id:6,  name:"PH Food & Wine Festival",       cat:"food",     city:"Port Harcourt", venue:"Rumuola Events Park",  date:"Sat 10 May", time:"11:00 AM",price:3500,   emoji:"🍷", gradient:"linear-gradient(145deg,#1a100a,#5c3010)" },
+  { id:7,  name:"Comedy Night PH",               cat:"comedy",   city:"Port Harcourt", venue:"Genesis Cinemas",      date:"Fri 2 May",  time:"7:00 PM", price:6000,   emoji:"🎙", gradient:"linear-gradient(145deg,#0a1a0a,#1a4a1a)" },
+  { id:8,  name:"Ibadan Startup Summit",         cat:"business", city:"Ibadan",        venue:"UI Conference Centre", date:"Thu 8 May",  time:"8:00 AM", price:0,      emoji:"🚀", gradient:"linear-gradient(145deg,#101628,#2a3a6e)" },
+  { id:9,  name:"Kano Arts & Culture Fair",      cat:"arts",     city:"Kano",          venue:"Kano Cultural Centre", date:"Sat 17 May", time:"10:00 AM",price:1500,   emoji:"🎨", gradient:"linear-gradient(145deg,#1a1200,#4a3000)" },
+  { id:10, name:"Enugu FC vs Enyimba",           cat:"sports",   city:"Enugu",         venue:"Nnamdi Azikiwe Stadium",date:"Sun 20 Apr",time:"4:00 PM", price:2000,   emoji:"⚽", gradient:"linear-gradient(145deg,#001a08,#004a18)" },
+  { id:11, name:"Lagos Fashion Week 2025",       cat:"arts",     city:"Lagos",         venue:"Federal Palace Hotel", date:"Thu 15 May", time:"5:00 PM", price:20000,  emoji:"👗", gradient:"linear-gradient(145deg,#1a0014,#4a003a)" },
+  { id:12, name:"Davido O2 Experience Lagos",   cat:"music",    city:"Lagos",         venue:"Eko Atlantic Arena",   date:"Sat 31 May", time:"7:00 PM", price:35000,  emoji:"🎶", gradient:"linear-gradient(145deg,#0a0018,#200040)" },
+  { id:13, name:"Nigeria Tech Summit Abuja",    cat:"tech",     city:"Abuja",         venue:"AICC",                 date:"Wed 14 May", time:"8:00 AM", price:10000,  emoji:"🤖", gradient:"linear-gradient(145deg,#001218,#003048)" },
+  { id:14, name:"Owambe Sundays Lagos",          cat:"party",    city:"Lagos",         venue:"Hard Rock Cafe",       date:"Sun 4 May",  time:"2:00 PM", price:5000,   emoji:"🥁", gradient:"linear-gradient(145deg,#180a00,#4a2200)" },
+  { id:15, name:"Business of Fashion Africa",   cat:"business", city:"Lagos",         venue:"Landmark Event Centre",date:"Fri 23 May", time:"9:00 AM", price:15000,  emoji:"💼", gradient:"linear-gradient(145deg,#0a0a18,#20204a)" },
+  { id:16, name:"Ibadan Food Festival",          cat:"food",     city:"Ibadan",        venue:"Agodi Gardens",        date:"Sat 24 May", time:"12:00 PM",price:2500,   emoji:"🍲", gradient:"linear-gradient(145deg,#0f1a00,#304a00)" },
+];
 
-  reveals.forEach(el => observer.observe(el));
+const BADGE_MAP = { music:"badge-music", comedy:"badge-comedy", tech:"badge-tech", party:"badge-party", food:"badge-food", sports:"badge-sports", arts:"badge-arts", business:"badge-business" };
+const CAT_LABEL = { music:"Music", comedy:"Comedy", tech:"Tech", party:"Party", food:"Food & Drink", sports:"Sports", arts:"Arts", business:"Business" };
 
-  // Waitlist form
-  const form = document.querySelector('.cta-form');
-  const input = form.querySelector('.cta-input');
-  const btn = form.querySelector('.cta-submit');
+let activeCategory = "all";
+let activeCity     = "";
+let searchQuery    = "";
+let savedEvents    = new Set();
+let visibleCount   = 8;
 
-  btn.addEventListener('click', () => {
-    if (input.value.includes('@')) {
-      btn.textContent = '✓ You\'re on the list';
-      btn.style.background = '#1a8a4a';
-      input.value = '';
-      input.disabled = true;
-      btn.disabled = true;
-    } else {
-      input.style.borderColor = '#e8452a';
-      setTimeout(() => input.style.borderColor = '#2a2a2a', 1500);
-    }
+function formatPrice(p) {
+  if (p === 0) return { html: '<span class="event-price free">Free</span>', small: "" };
+  return { html: `<span class="event-price">₦${p.toLocaleString()}</span>`, small: "from" };
+}
+
+function renderCard(ev) {
+  const badge = BADGE_MAP[ev.cat] || "";
+  const { html: priceHtml, small } = formatPrice(ev.price);
+  const saved = savedEvents.has(ev.id) ? "saved" : "";
+  return `
+    <div class="event-card" onclick="goToEvent(${ev.id})">
+      <div class="event-thumb">
+        <div class="event-thumb-bg" style="background:${ev.gradient}">${ev.emoji}</div>
+        <span class="event-badge ${badge}">${CAT_LABEL[ev.cat]}</span>
+        <button class="event-save ${saved}" onclick="toggleSave(event,${ev.id})">${savedEvents.has(ev.id) ? "♥" : "♡"}</button>
+      </div>
+      <div class="event-body">
+        <div class="event-name">${ev.name}</div>
+        <div class="event-meta">
+          <div class="event-meta-row">📅 ${ev.date} · ${ev.time}</div>
+          <div class="event-meta-row">📍 ${ev.venue}, ${ev.city}</div>
+        </div>
+      </div>
+      <div class="event-footer">
+        <div>${priceHtml}${small ? `<small>${small}</small>` : ""}</div>
+        <button class="btn-get" onclick="event.stopPropagation();goToEvent(${ev.id})">Get tickets</button>
+      </div>
+    </div>`;
+}
+
+function goToEvent(id) { window.location.href = "nuffseats-event-detail.html"; }
+
+function getFiltered() {
+  return EVENTS.filter(ev => {
+    const catMatch   = activeCategory === "all" || ev.cat === activeCategory;
+    const cityMatch  = activeCity === "" || ev.city === activeCity;
+    const q          = searchQuery.toLowerCase();
+    const queryMatch = !q || ev.name.toLowerCase().includes(q) || ev.city.toLowerCase().includes(q) || ev.venue.toLowerCase().includes(q);
+    return catMatch && cityMatch && queryMatch;
   });
+}
+
+function renderEvents() {
+  const filtered = getFiltered();
+  const grid     = document.getElementById("eventsGrid");
+  const empty    = document.getElementById("emptyState");
+  const loadWrap = document.getElementById("loadMoreWrap");
+  const countEl  = document.getElementById("resultCount");
+  const titleEl  = document.getElementById("listingTitle");
+  const slice    = filtered.slice(0, visibleCount);
+
+  if (filtered.length === 0) {
+    grid.innerHTML = ""; empty.classList.add("visible"); loadWrap.style.display = "none"; countEl.textContent = "0 events";
+  } else {
+    empty.classList.remove("visible"); grid.innerHTML = slice.map(renderCard).join("");
+    loadWrap.style.display = filtered.length > visibleCount ? "block" : "none";
+    countEl.textContent = `${filtered.length} event${filtered.length !== 1 ? "s" : ""}`;
+  }
+
+  let t = "All events";
+  if (activeCity)              t = `Events in ${activeCity}`;
+  if (activeCategory !== "all") t = `${CAT_LABEL[activeCategory]} events${activeCity ? " in "+activeCity : ""}`;
+  if (searchQuery)             t = `Results for "${searchQuery}"`;
+  titleEl.textContent = t;
+  updateCityCounts();
+}
+
+function updateCityCounts() {
+  const cities = { "":"all", "Lagos":"lagos", "Abuja":"abuja", "Port Harcourt":"ph", "Ibadan":"ibadan", "Kano":"kano", "Enugu":"enugu" };
+  for (const [city, key] of Object.entries(cities)) {
+    const el = document.getElementById(`count-${key}`);
+    if (!el) continue;
+    const n = EVENTS.filter(ev => {
+      const catMatch  = activeCategory === "all" || ev.cat === activeCategory;
+      const q         = searchQuery.toLowerCase();
+      const qMatch    = !q || ev.name.toLowerCase().includes(q);
+      const cityMatch = city === "" || ev.city === city;
+      return catMatch && cityMatch && qMatch;
+    }).length;
+    el.textContent = `${n} event${n !== 1 ? "s" : ""}`;
+  }
+}
+
+function loadMore() { visibleCount += 8; renderEvents(); }
+
+document.getElementById("categoryChips").addEventListener("click", e => {
+  const chip = e.target.closest(".chip");
+  if (!chip) return;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  chip.classList.add("active");
+  activeCategory = chip.dataset.cat;
+  visibleCount = 8; renderEvents();
+});
+
+document.getElementById("cityStrip").addEventListener("click", e => {
+  const card = e.target.closest(".city-card");
+  if (!card) return;
+  document.querySelectorAll(".city-card").forEach(c => c.classList.remove("active"));
+  card.classList.add("active");
+  activeCity = card.dataset.city;
+  const sel = document.getElementById("cityFilter");
+  if (sel) sel.value = activeCity;
+  visibleCount = 8; renderEvents();
+});
+
+function applySearch() {
+  searchQuery = document.getElementById("mainSearchInput").value.trim();
+  const cityVal = document.getElementById("cityFilter").value;
+  activeCity = cityVal;
+  document.querySelectorAll(".city-card").forEach(c => c.classList.toggle("active", c.dataset.city === cityVal));
+  visibleCount = 8; renderEvents();
+}
+
+document.getElementById("mainSearchInput").addEventListener("keydown", e => { if (e.key === "Enter") applySearch(); });
+document.getElementById("navSearchInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") { document.getElementById("mainSearchInput").value = e.target.value; applySearch(); }
+});
+
+function toggleSave(e, id) {
+  e.stopPropagation();
+  if (savedEvents.has(id)) savedEvents.delete(id); else savedEvents.add(id);
+  renderEvents();
+}
+
+// Waitlist
+function submitWaitlist() {
+  const input = document.getElementById("waitlistEmail");
+  const btn   = document.querySelector(".waitlist-submit");
+  if (input.value.includes("@")) {
+    btn.textContent = "✓ You're on the list";
+    btn.style.background = "#1a8a4a";
+    input.value = ""; input.disabled = true; btn.disabled = true;
+  } else {
+    input.style.borderColor = "#e8452a";
+    setTimeout(() => input.style.borderColor = "#2a2a2a", 1500);
+  }
+}
+
+// Scroll reveals
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(en => { if (en.isIntersecting) en.target.classList.add("visible"); });
+}, { threshold: 0.12 });
+document.querySelectorAll(".reveal, .fade-in").forEach(el => revealObserver.observe(el));
+
+// Init
+renderEvents();
 </script>
 </body>
 </html>
